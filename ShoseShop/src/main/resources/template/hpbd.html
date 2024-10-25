@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://images.unsplash.com/photo-1525333689196-60d7b0d52f42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=1920');
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #ff4081;
+        }
+        p {
+            font-size: 20px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .signature {
+            font-style: italic;
+            color: #333;
+            font-size: 18px;
+            margin-top: 30px;
+            text-align: center; /* Căn giữa nội dung */
+        }
+        .balloons {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        .balloon {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background-color: #ff4081;
+            border-radius: 30px;
+            animation: float 3s infinite;
+        }
+        .balloon:nth-child(2) { left: 50px; animation-delay: 0.5s; }
+        .balloon:nth-child(3) { left: 150px; animation-delay: 1s; }
+        .balloon:nth-child(4) { left: 250px; animation-delay: 1.5s; }
+        .balloon:nth-child(5) { left: 350px; animation-delay: 2s; }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Happy Birthday <span th:text="${name}"></span>!</h1>
+    <div class="balloons">
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+    </div>
+    <p>Chúc bạn một ngày sinh nhật thật đặc biệt!</p>
+    <p>Hãy tận hưởng mọi khoảnh khắc trong ngày hôm nay.</p>
+    <p>Cảm ơn,</p>
+    <p class="signature">===================Shose Shop====================</p>
+</div>
+</body>
+</html>
