@@ -4,7 +4,6 @@ import com.shose.shoseshop.entity.User;
 import com.shose.shoseshop.repository.UserRepository;
 import com.shose.shoseshop.service.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -13,10 +12,10 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class JobScheduler {
-    UserRepository userRepo;
-    EmailService emailService;
+    private final UserRepository userRepo;
+    private final EmailService emailService;
 
-    @Scheduled(cron = "* 10 * * * *")
+//    @Scheduled(cron = "* * * * * *")
     public void sendMail() {
         LocalDate date = LocalDate.now();
         int month = date.getMonthValue();

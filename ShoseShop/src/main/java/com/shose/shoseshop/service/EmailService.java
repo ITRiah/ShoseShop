@@ -14,8 +14,8 @@ import java.nio.charset.StandardCharsets;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
-    JavaMailSender javaMailSender;
-    SpringTemplateEngine templateEngine;
+    private final JavaMailSender javaMailSender;
+    private final SpringTemplateEngine templateEngine;
 
     public void sendMail(String subject, String body, String to) {
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -33,12 +33,11 @@ public class EmailService {
         }
     }
 
-
     public void sendBirthDay(String to, String name) {
         String subject = "Happy birthday " + name;
         Context context = new Context();
         context.setVariable("name", name);
-        String body = templateEngine.process("./hpbd.html", context);
+        String body = templateEngine.process("hpbd", context);
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
         try {
