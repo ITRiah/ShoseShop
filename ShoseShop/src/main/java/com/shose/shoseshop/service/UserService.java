@@ -12,5 +12,9 @@ public interface UserService {
 //    UserResponse getUser(Long id);
 //
 //    UpdateUserResponse updateUserByID(Long id, UpdateUserRequest updateUserRequest);
-//    void deleteByUserById(Long id);
+    void deleteUser(Long id);
+
+    void forgotPassword(String email);
+
+    void updatePassword(String email, String newPassword, String otp);
 }

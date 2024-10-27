@@ -1,5 +1,6 @@
 package com.shose.shoseshop.entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class OTP {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +23,10 @@ public class OTP {
     private String otp;
     private String email;
     private LocalDateTime createAt;
+
+    public OTP(String otp, String email) {
+        this.otp = otp;
+        this.email = email;
+        this.createAt = LocalDateTime.now();
+    }
 }

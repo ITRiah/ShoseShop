@@ -3,6 +3,7 @@ package com.shose.shoseshop.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,6 +19,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
+@MappedSuperclass
 @JsonIgnoreProperties(value = {"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"}, allowGetters = true)
 public class BaseEntity implements Serializable {
     @Serial

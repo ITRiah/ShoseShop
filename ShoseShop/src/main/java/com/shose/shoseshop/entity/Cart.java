@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -16,13 +18,14 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_detail_id", nullable = false)
-    private ProductDetail productDetail;
+    @OneToMany
+    private List<Order> order;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Integer quantity;
+    public Cart(User user) {
+        this.user = user;
+    }
 }

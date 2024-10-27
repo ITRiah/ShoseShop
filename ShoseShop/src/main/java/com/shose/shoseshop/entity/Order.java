@@ -23,6 +23,10 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
+
     private String fullname;
     private String phone;
     private Integer status;
