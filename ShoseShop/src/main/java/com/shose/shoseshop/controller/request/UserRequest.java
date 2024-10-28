@@ -1,4 +1,4 @@
-package com.shose.shoseshop.controller.error.request;
+package com.shose.shoseshop.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shose.shoseshop.constant.Role;

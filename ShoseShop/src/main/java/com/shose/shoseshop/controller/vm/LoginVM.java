@@ -1,4 +1,4 @@
-package com.shose.shoseshop.controller.error.vm;
+package com.shose.shoseshop.controller.vm;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

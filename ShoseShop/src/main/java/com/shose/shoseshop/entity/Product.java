@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -25,7 +27,7 @@ public class Product extends BaseEntity{
 
     private String name;
     private String description;
-    private Integer priceRange;
-    private Integer status;
+    private String img;
+    private BigDecimal priceRange;
     private Float star;
 }

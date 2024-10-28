@@ -1,4 +1,4 @@
-package com.shose.shoseshop.controller.error.response;
+package com.shose.shoseshop.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

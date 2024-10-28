@@ -1,5 +1,5 @@
 package com.shose.shoseshop.controller.error;
-import com.shose.shoseshop.controller.error.response.ResponseData;
+import com.shose.shoseshop.controller.response.ResponseData;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -62,10 +62,9 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({AccessDeniedException.class})
-    @ResponseStatus(code = HttpStatus.FORBIDDEN)
     public ResponseData<String> handleAccessDeniedException(AccessDeniedException ex){
         log.debug("------handleAccessDeniedException {}", ex.getMessage());
-        return new ResponseData<>(HttpStatus.CONFLICT, ex.getMessage());
+        return new ResponseData<>(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

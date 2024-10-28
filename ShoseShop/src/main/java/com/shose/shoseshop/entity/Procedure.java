@@ -12,10 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "procedures")
-public class Procedure {
+public class Procedure extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(length = 254, unique = true, nullable = false)
     private String name;
-    private Integer status;
+
+    public Procedure(String name) {
+        this.name = name;
+    }
 }

@@ -1,6 +1,5 @@
-package com.shose.shoseshop.entity;
+package com.shose.shoseshop.controller.request;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,16 +9,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Voucher {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique = true)
+public class VoucherRequest {
     private String code;
     private Integer value;
     private Integer quantity;
@@ -27,6 +21,5 @@ public class Voucher {
     private LocalDateTime expiredTime;
     private String description;
     private Set<Long> userIds;
-    private Boolean isDeleted;
+    private Boolean isDeleted = Boolean.FALSE;
 }
-

@@ -1,6 +1,6 @@
 package com.shose.shoseshop.service.impl;
 
-import com.shose.shoseshop.controller.error.request.UserRequest;
+import com.shose.shoseshop.controller.request.UserRequest;
 import com.shose.shoseshop.entity.OTP;
 import com.shose.shoseshop.entity.User;
 import com.shose.shoseshop.repository.UserRepository;

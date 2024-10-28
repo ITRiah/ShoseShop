@@ -1,6 +1,6 @@
 package com.shose.shoseshop.service;
 
-import com.shose.shoseshop.controller.error.request.UserRequest;
+import com.shose.shoseshop.controller.request.UserRequest;
 
 public interface UserService {
 //    Page<UserDTO> listUser(Pageable pageable, UserFilterForm searchDTO);

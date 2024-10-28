@@ -1,9 +1,9 @@
-package com.shose.shoseshop.controller.error;
+package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.configuration.security.JWTToken;
 import com.shose.shoseshop.configuration.security.TokenProvider;
-import com.shose.shoseshop.controller.error.response.ResponseData;
-import com.shose.shoseshop.controller.error.vm.LoginVM;
+import com.shose.shoseshop.controller.response.ResponseData;
+import com.shose.shoseshop.controller.vm.LoginVM;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

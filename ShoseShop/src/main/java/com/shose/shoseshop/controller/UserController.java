@@ -1,7 +1,7 @@
-package com.shose.shoseshop.controller.error;
+package com.shose.shoseshop.controller;
 
-import com.shose.shoseshop.controller.error.request.UserRequest;
-import com.shose.shoseshop.controller.error.response.ResponseData;
+import com.shose.shoseshop.controller.request.UserRequest;
+import com.shose.shoseshop.controller.response.ResponseData;
 import com.shose.shoseshop.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
