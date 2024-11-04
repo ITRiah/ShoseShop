@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Feedback extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -30,4 +30,5 @@ public class Feedback extends BaseEntity {
 
     private Integer rate;
     private String description;
+    private String img;
 }

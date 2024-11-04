@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Procedure extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 254, unique = true, nullable = false)
     private String name;
