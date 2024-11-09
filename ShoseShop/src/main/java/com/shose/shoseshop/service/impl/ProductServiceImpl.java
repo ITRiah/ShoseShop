@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +28,10 @@ public class ProductServiceImpl implements ProductService {
     ProductRepository productRepository;
     ProcedureRepository procedureRepository;
     CategoryRepository categoryRepository;
+    UploadFileServiceImpl uploadFileService;
 
     @Override
-    public void create(ProductRequest productRequest) {
+    public String create(ProductRequest productRequest) throws IOException {
         Product product = new ModelMapper().map(productRequest, Product.class);
         Procedure procedure = procedureRepository.findById(productRequest.getProcedure())
                 .orElseThrow(EntityNotFoundException::new);
@@ -37,7 +39,10 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(EntityNotFoundException::new);
         product.setProcedure(procedure);
         product.setCategory(category);
+        String urlImage = uploadFileService.uploadImage(productRequest.getFile());
+        product.setImg(urlImage);
         productRepository.save(product);
+        return urlImage;
     }
 
     @Override

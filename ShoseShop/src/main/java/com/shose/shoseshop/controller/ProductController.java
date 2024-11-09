@@ -29,20 +29,8 @@ public class ProductController {
     String UPLOAD_FOLDER;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseData<Void> create(@Valid @ModelAttribute ProductRequest productRequest) throws IOException {
-        if (!(new File(UPLOAD_FOLDER).exists())) {
-            new File(UPLOAD_FOLDER).mkdirs();
-        }
-        MultipartFile file = productRequest.getFile();
-        if (file != null) {
-            String fileName = file.getOriginalFilename();
-            String uniqueFileName = UUID.randomUUID() + "_" + fileName;
-            String filePath = UPLOAD_FOLDER + uniqueFileName;
-            file.transferTo(new File(filePath));
-            productRequest.setImg(uniqueFileName);
-        }
-        productService.create(productRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Create product is success!");
+    public ResponseData<String> create(@Valid @ModelAttribute ProductRequest productRequest) throws IOException {
+        return new ResponseData<>(HttpStatus.CREATED,  productService.create(productRequest));
     }
 
     @GetMapping("/{categoryId}")
