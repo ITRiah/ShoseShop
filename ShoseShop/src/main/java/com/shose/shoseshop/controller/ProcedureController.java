@@ -1,7 +1,6 @@
 package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.controller.request.ProcedureRequest;
-import com.shose.shoseshop.controller.request.UserRequest;
 import com.shose.shoseshop.controller.response.ProcedureResponse;
 import com.shose.shoseshop.controller.response.ResponseData;
 import com.shose.shoseshop.service.ProcedureService;

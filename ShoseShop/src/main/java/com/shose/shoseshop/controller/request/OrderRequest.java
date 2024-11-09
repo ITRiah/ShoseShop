@@ -1,41 +1,24 @@
-package com.shose.shoseshop.entity;
+package com.shose.shoseshop.controller.request;
 
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.constant.PaymentMethod;
 import com.shose.shoseshop.constant.ShippingMethod;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "orders")
-
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
+public class OrderRequest {
+    private Long userId;
     private String fullName;
     private String phone;
-    private OrderStatus status = OrderStatus.PENDING;
     private String reason;
-    private LocalDateTime orderDate = LocalDateTime.now();
     private String shippingAddress;
     private ShippingMethod shippingMethod;
     private PaymentMethod paymentMethod;
-    private BigDecimal totalAmount;
     private String note;
 }

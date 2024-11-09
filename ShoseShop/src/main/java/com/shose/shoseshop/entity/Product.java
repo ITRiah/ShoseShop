@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class Product extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "procedure_id", nullable = false)
