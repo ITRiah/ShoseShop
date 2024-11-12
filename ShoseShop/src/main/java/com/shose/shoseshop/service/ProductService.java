@@ -14,5 +14,5 @@ public interface ProductService {
 
     List<ProductResponse> getByCategory(Long categoryId);
 
-    Page<ProductResponse> listUser(Pageable pageable, ProductFilterRequest request);
+    Page<ProductResponse> listProduct(Pageable pageable, ProductFilterRequest request);
 }

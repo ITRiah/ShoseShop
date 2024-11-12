@@ -39,7 +39,7 @@ public class ProductController {
     public ResponseData<ProductResponse> getAll(@PageableDefault(size = 10)
                                        @SortDefault.SortDefaults({@SortDefault(sort = Product_.NAME, direction = Sort.Direction.ASC)})
                                        Pageable pageable,
-                                       ProductFilterRequest request) {
-        return new ResponseData<>(productService.listUser(pageable, request));
+                                       @RequestBody ProductFilterRequest request) {
+        return new ResponseData<>(productService.listProduct(pageable, request));
     }
 }

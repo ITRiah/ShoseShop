@@ -60,8 +60,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponse> listUser(Pageable pageable, ProductFilterRequest request) {
-        Specification<Product> specUser = ProductSpecification.hasProcedureIdIn(request.getProcedureIds());
+    public Page<ProductResponse> listProduct(Pageable pageable, ProductFilterRequest request) {
+        Specification<Product> specUser = ProductSpecification.generateFilterProducts(request);
         Page<Product> productPage = productRepository.findAll(specUser, pageable);
         return productPage.map(product -> modelMapper.map(product, ProductResponse.class));
     }
