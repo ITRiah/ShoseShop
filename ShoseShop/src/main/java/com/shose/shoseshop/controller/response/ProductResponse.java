@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +21,6 @@ public class ProductResponse extends BaseEntity {
     private String description;
     private BigDecimal priceRange;
     private Float star;
+    private String img;
+    List<ProductDetailResponse> productDetailResponseList;
 }

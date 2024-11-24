@@ -12,17 +12,14 @@ import org.hibernate.annotations.Where;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "procedures")
 @Where(clause = "is_deleted = false")
-public class Procedure extends BaseEntity{
+public class CartDetail extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(length = 254, unique = true, nullable = false)
-    private String name;
-
-    public Procedure(String name) {
-        this.name = name;
-    }
+    @ManyToOne
+    @JoinColumn(name = "product_detail_id")
+    private ProductDetail productDetail;
+    private Long quantity;
+    private Long cartId;
 }

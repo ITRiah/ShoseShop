@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -15,19 +17,17 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Voucher {
+@Where(clause = "is_deleted = false")
+public class Voucher extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true)
     private String code;
     private Integer value;
     private Integer quantity;
     private BigDecimal maxMoney;
-    private LocalDateTime expiredTime;
+    private Date expiredTime;
     private String description;
-    private Set<Long> userIds;
-    private Boolean isDeleted;
 }
 

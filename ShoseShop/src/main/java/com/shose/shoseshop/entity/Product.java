@@ -4,14 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "is_deleted = false")
 public class Product extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +33,7 @@ public class Product extends BaseEntity{
     private String img;
     private BigDecimal priceRange;
     private Float star;
+
+    @OneToMany(mappedBy = "product")
+    List<ProductDetail> productDetailResponseList;
 }

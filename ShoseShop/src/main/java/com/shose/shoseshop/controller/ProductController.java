@@ -27,6 +27,7 @@ public class ProductController {
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseData<String> create(@Valid @ModelAttribute ProductRequest productRequest) throws IOException {
+        productService.create(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Create product success!");
     }
 
@@ -35,11 +36,11 @@ public class ProductController {
         return new ResponseData<>(productService.getByCategory(categoryId));
     }
 
-    @PostMapping("/all")
+    @GetMapping
     public ResponseData<ProductResponse> getAll(@PageableDefault(size = 10)
                                        @SortDefault.SortDefaults({@SortDefault(sort = Product_.NAME, direction = Sort.Direction.ASC)})
                                        Pageable pageable,
-                                       @RequestBody ProductFilterRequest request) {
+                                       @RequestBody(required = false) ProductFilterRequest request) {
         return new ResponseData<>(productService.listProduct(pageable, request));
     }
 }

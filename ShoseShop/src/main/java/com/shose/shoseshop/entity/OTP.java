@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
@@ -16,17 +17,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OTP {
+@Where(clause = "is_deleted = false")
+public class OTP extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String otp;
     private String email;
-    private LocalDateTime createAt;
 
     public OTP(String otp, String email) {
         this.otp = otp;
         this.email = email;
-        this.createAt = LocalDateTime.now();
     }
 }

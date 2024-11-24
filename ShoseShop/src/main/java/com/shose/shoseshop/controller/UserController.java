@@ -37,4 +37,10 @@ public class UserController {
         userService.updatePassword(email, password, otp);
         return new ResponseData<>(HttpStatus.CREATED, "Your password has been updated!");
     }
+
+    @PatchMapping("/block")
+    public ResponseData<Void> forgotPassword(@RequestParam("id") Long id) {
+        userService.deleteUser(id);
+        return new ResponseData<>(HttpStatus.CREATED, "OTP has been sent to your email!");
+    }
 }

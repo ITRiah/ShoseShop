@@ -22,7 +22,7 @@ public class ProductSpecification {
 
     public static Specification<Product> generateFilterProducts(ProductFilterRequest request) {
         Specification<Product> specification = Specification.where(null);
-
+        if (request == null) return specification;
         if (request.getProcedureIds() != null && !request.getProcedureIds().isEmpty()) {
             specification = specification.and(hasProcedureIdIn(request.getProcedureIds()));
         }

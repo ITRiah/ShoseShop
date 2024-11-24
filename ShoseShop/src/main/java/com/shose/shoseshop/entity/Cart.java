@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -13,13 +14,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cart {
+@Where(clause = "is_deleted = false")
+public class Cart extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany
-    private List<Order> order;
+    List<CartDetail> cartDetails;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)

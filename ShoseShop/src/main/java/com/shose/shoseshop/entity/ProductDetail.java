@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 
@@ -13,7 +14,8 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDetail {
+@Where(clause = "is_deleted = false")
+public class ProductDetail extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,5 +29,4 @@ public class ProductDetail {
     private Integer quantity;
     private String img;
     private BigDecimal price;
-    private Boolean isDeleted;
 }

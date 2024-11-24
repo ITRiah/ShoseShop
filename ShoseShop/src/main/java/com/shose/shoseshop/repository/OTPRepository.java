@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface OTPRepository extends JpaRepository<OTP, Long>, JpaSpecificationExecutor<OTP> {
-    @Query("SELECT o FROM OTP o WHERE o.email = :email ORDER BY o.createAt DESC")
+    @Query("SELECT o FROM OTP o WHERE o.email = :email ORDER BY o.createdAt DESC")
     Optional<OTP> findTopByEmailOrderByCreateAtDesc(@Param("email") String email);
 }

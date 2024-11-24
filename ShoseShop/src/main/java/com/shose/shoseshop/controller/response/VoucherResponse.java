@@ -1,4 +1,4 @@
-package com.shose.shoseshop.controller.request;
+package com.shose.shoseshop.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,8 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VoucherRequest {
+public class VoucherResponse {
+    private Long id;
     private String code;
     private Integer value;
     private Integer quantity;
