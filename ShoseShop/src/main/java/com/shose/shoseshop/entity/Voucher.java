@@ -17,7 +17,6 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Where(clause = "is_deleted = false")
 public class Voucher extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

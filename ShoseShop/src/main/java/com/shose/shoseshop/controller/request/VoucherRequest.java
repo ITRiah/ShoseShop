@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoucherRequest {
+    private Long id;
     private String code;
     private Integer value;
     private Integer quantity;

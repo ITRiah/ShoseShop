@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductRequest {
+    private Long id;
     private Long procedure;
     private Long category;
     private String name;

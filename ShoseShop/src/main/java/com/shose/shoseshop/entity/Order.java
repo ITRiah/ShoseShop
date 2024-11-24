@@ -12,6 +12,7 @@ import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -33,7 +34,7 @@ public class Order extends BaseEntity {
     private String phone;
     private OrderStatus status = OrderStatus.PENDING;
     private String reason;
-    private LocalDateTime orderDate = LocalDateTime.now();
+    private Date orderDate = new Date();
     private String shippingAddress;
     private ShippingMethod shippingMethod;
     private PaymentMethod paymentMethod;

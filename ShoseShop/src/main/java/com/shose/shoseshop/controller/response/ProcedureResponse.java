@@ -12,5 +12,4 @@ import lombok.Setter;
 public class ProcedureResponse {
     private Long id;
     private String name;
-    private Boolean isDeleted;
 }

@@ -12,4 +12,6 @@ import java.util.List;
 public interface VoucherRepository extends JpaRepository<Voucher, Long>, JpaSpecificationExecutor<Voucher> {
     @Query("SELECT v FROM Voucher v WHERE v.expiredTime >= :now")
     List<Voucher> findAllByExpiredTimeAfterOrEqual(@Param("now") Date now);
+
+    List<Voucher> findByIsDeletedFalse();
 }

@@ -1,18 +1,15 @@
 package com.shose.shoseshop.controller.request;
 
-import com.shose.shoseshop.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductFilterRequest {
-    private Set<Long> procedureIds;
-    Role role;
+public class UserFilterRequest {
+    private String email;
+    private String userName;
 }

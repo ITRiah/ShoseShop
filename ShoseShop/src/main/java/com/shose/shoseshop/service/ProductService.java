@@ -10,9 +10,13 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
-    String create(ProductRequest productRequest) throws IOException;
+    void create(ProductRequest productRequest) throws IOException;
 
     List<ProductResponse> getByCategory(Long categoryId);
 
     Page<ProductResponse> listProduct(Pageable pageable, ProductFilterRequest request);
+
+    void delete(Long id);
+
+    void update(ProductRequest productRequest) throws IOException;
 }

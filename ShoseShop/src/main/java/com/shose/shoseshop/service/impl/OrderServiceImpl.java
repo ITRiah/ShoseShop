@@ -1,18 +1,23 @@
 package com.shose.shoseshop.service.impl;
 
 import com.shose.shoseshop.constant.OrderStatus;
+import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
-import com.shose.shoseshop.controller.response.ProductDetailResponse;
+import com.shose.shoseshop.controller.response.OrderResponse;
+import com.shose.shoseshop.controller.response.UserResponse;
 import com.shose.shoseshop.entity.*;
-import com.shose.shoseshop.repository.CartDetailRepository;
-import com.shose.shoseshop.repository.OrderDetailRepository;
-import com.shose.shoseshop.repository.OrderRepository;
-import com.shose.shoseshop.repository.UserRepository;
+import com.shose.shoseshop.repository.*;
 import com.shose.shoseshop.service.OrderService;
+import com.shose.shoseshop.specification.OrderSpecification;
+import com.shose.shoseshop.specification.UserSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +36,8 @@ public class OrderServiceImpl implements OrderService {
     OrderDetailRepository orderDetailRepository;
     CartDetailRepository cartDetailRepository;
     UserRepository userRepository;
+    VoucherRepository voucherRepository;
+    ModelMapper modelMapper;
 
     @Override
     @Transactional
@@ -40,9 +46,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = createOrderFromRequest(orderRequest, user);
         List<CartDetail> cartDetails = getCartDetails(orderRequest.getCartDetailIds());
         List<OrderDetail> orderDetails = mapCartDetailsToOrderDetails(cartDetails, order);
-        BigDecimal totalAmount = calculateTotalAmount(orderDetails);
+        BigDecimal totalAmount = calculateTotalAmount(orderDetails, orderRequest);
         order.setTotalAmount(totalAmount);
-        saveOrderAndDetails(order, orderDetails);
+        saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails);
     }
 
     private User getUserFromContext() {
@@ -71,14 +77,27 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    private BigDecimal calculateTotalAmount(List<OrderDetail> orderDetails) {
-        return orderDetails.stream()
+    private BigDecimal calculateTotalAmount(List<OrderDetail> orderDetails, OrderRequest orderRequest) {
+        BigDecimal total = orderDetails.stream()
                 .map(orderDetail -> orderDetail.getProductDetail().getPrice()
                         .multiply(BigDecimal.valueOf(orderDetail.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (orderRequest.getVoucherId() != null) {
+            Voucher voucher = voucherRepository.findById(orderRequest.getVoucherId()).orElseThrow(EntityNotFoundException::new);
+            int value = voucher.getValue();
+            BigDecimal maxMoney = voucher.getMaxMoney();
+            if (total.multiply(BigDecimal.valueOf(value / 100)).compareTo(maxMoney) > 0) {
+                total = total.subtract(maxMoney);
+            } else {
+                total = total.subtract(total.multiply(BigDecimal.valueOf(value / 100)));
+            }
+        }
+        return total;
     }
 
-    private void saveOrderAndDetails(Order order, List<OrderDetail> orderDetails) {
+    private void saveOrderAndDetailsAndCartDetails(Order order, List<OrderDetail> orderDetails, List<CartDetail> cartDetails) {
+        cartDetails.forEach(BaseEntity::markAsDelete);
+        cartDetailRepository.saveAll(cartDetails);
         orderDetailRepository.saveAll(orderDetails);
         orderRepository.save(order);
     }
@@ -90,5 +109,12 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         order.setStatus(status);
         orderRepository.save(order);
+    }
+
+    @Override
+    public Page<OrderResponse> getAll(Pageable pageable, OrderFilterRequest request) {
+        Specification<Order> spec = OrderSpecification.generateFilter(request);
+        Page<Order> orderPage = orderRepository.findAll(spec, pageable);
+        return orderPage.map(order -> modelMapper.map(order, OrderResponse.class));
     }
 }

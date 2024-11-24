@@ -26,7 +26,7 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseData<String> create(@Valid @ModelAttribute ProductRequest productRequest) throws IOException {
+    public ResponseData<Void> create(@Valid @ModelAttribute ProductRequest productRequest) throws IOException {
         productService.create(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Create product success!");
     }
@@ -42,5 +42,17 @@ public class ProductController {
                                        Pageable pageable,
                                        @RequestBody(required = false) ProductFilterRequest request) {
         return new ResponseData<>(productService.listProduct(pageable, request));
+    }
+
+    @DeleteMapping
+    public ResponseData<Void> create(@RequestParam Long id) throws IOException {
+        productService.delete(id);
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete product success!");
+    }
+
+    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseData<Void> update(@Valid @ModelAttribute ProductRequest productRequest) throws IOException {
+        productService.create(productRequest);
+        return new ResponseData<>(HttpStatus.CREATED, "Update product success!");
     }
 }
