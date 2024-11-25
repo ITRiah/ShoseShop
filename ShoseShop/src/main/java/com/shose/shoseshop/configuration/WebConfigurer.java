@@ -22,11 +22,13 @@ public class WebConfigurer implements ServletContextInitializer, WebMvcConfigure
 
     private final Environment env;
 
+    // Bean cho ModelMapper
     @Bean
     public ModelMapper initModelMapper(){
         return new ModelMapper();
     }
 
+    // Phương thức cấu hình cho ServletContext
     @Override
     public void onStartup(ServletContext servletContext) {
         if (env.getActiveProfiles().length != 0) {
@@ -35,28 +37,38 @@ public class WebConfigurer implements ServletContextInitializer, WebMvcConfigure
         log.info("Web application fully configured");
     }
 
+    // Cấu hình CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+
+        // Cấu hình các giá trị CORS cho phép
+        config.setAllowCredentials(true); // Cho phép gửi thông tin đăng nhập (cookies)
+        config.addAllowedOrigin("http://localhost:3000"); // Địa chỉ frontend được phép truy cập
+        config.addAllowedMethod("*"); // Cho phép tất cả các phương thức HTTP (GET, POST, PUT, DELETE, OPTIONS)
+        config.addAllowedHeader("*"); // Cho phép tất cả các headers
+
+        // Đảm bảo rằng các giá trị CORS không trống trước khi đăng ký chúng
         if (!CollectionUtils.isEmpty(config.getAllowedOrigins()) || !CollectionUtils.isEmpty(config.getAllowedOriginPatterns())) {
             log.debug("Registering CORS filter");
-            source.registerCorsConfiguration("/api/**", config);
-            source.registerCorsConfiguration("/management/**", config);
-            source.registerCorsConfiguration("/v3/api-docs", config);
-            source.registerCorsConfiguration("/swagger-ui/**", config);
+            source.registerCorsConfiguration("/api/**", config); // Đăng ký CORS cho các API
+            source.registerCorsConfiguration("/management/**", config); // Đăng ký CORS cho các API quản lý
+            source.registerCorsConfiguration("/v3/api-docs", config); // Đăng ký CORS cho API docs (Swagger)
+            source.registerCorsConfiguration("/swagger-ui/**", config); // Đăng ký CORS cho Swagger UI
         }
+
         return source;
     }
 
+    // Cấu hình nội dung cho việc đàm phán kiểu dữ liệu (Content Negotiation)
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer
                 .favorParameter(false)
                 .ignoreAcceptHeader(true)
-                .defaultContentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                .defaultContentType(org.springframework.http.MediaType.APPLICATION_JSON) // Kiểu dữ liệu mặc định là JSON
                 .mediaType("json", org.springframework.http.MediaType.APPLICATION_JSON)
                 .mediaType("xml", org.springframework.http.MediaType.APPLICATION_XML);
     }
-
 }
