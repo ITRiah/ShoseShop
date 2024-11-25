@@ -47,8 +47,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(EntityNotFoundException::new);
         product.setProcedure(procedure);
         product.setCategory(category);
-        String urlImage = uploadFileService.uploadImage(productRequest.getFile());
-        product.setImg(urlImage);
+        product.setImg(productRequest.getImg());
         productRepository.save(product);
     }
 
