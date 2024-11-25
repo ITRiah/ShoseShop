@@ -26,7 +26,7 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseData<Void> create(@Valid @ModelAttribute ProductRequest productRequest) throws IOException {
+    public ResponseData<Void> create(@RequestBody ProductRequest productRequest) throws IOException {
         productService.create(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Create product success!");
     }
@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseData<Void> update(@Valid @ModelAttribute ProductRequest productRequest) throws IOException {
+    public ResponseData<Void> update(@RequestBody ProductRequest productRequest) throws IOException {
         productService.create(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Update product success!");
     }
