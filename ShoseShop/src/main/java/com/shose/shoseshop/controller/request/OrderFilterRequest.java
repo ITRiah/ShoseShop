@@ -1,5 +1,6 @@
 package com.shose.shoseshop.controller.request;
 
+import com.shose.shoseshop.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,5 @@ public class OrderFilterRequest {
     private Date dateTo;
     private String fullName;
     private String name;
+    private Role role;
 }

@@ -2,13 +2,17 @@ package com.shose.shoseshop.specification;
 
 import com.shose.shoseshop.constant.Role;
 import com.shose.shoseshop.controller.request.ProductFilterRequest;
-import com.shose.shoseshop.entity.*;
-import com.shose.shoseshop.entity.Order;
+import com.shose.shoseshop.entity.Procedure;
+import com.shose.shoseshop.entity.Procedure_;
+import com.shose.shoseshop.entity.Product;
+import com.shose.shoseshop.entity.Product_;
 import com.shose.shoseshop.util.QueryUtils;
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Date;
 import java.util.Set;
 
 public class ProductSpecification {

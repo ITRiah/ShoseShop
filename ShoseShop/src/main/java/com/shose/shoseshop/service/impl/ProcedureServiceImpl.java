@@ -67,4 +67,10 @@ public class ProcedureServiceImpl implements ProcedureService {
         productRepository.saveAll(products);
         procedureRepository.save(procedure);
     }
+
+    @Override
+    public ProcedureResponse getById(Long id) {
+        Procedure procedure = procedureRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(procedure, ProcedureResponse.class);
+    }
 }

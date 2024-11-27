@@ -16,4 +16,6 @@ public interface ProcedureService {
     Page<ProcedureResponse> getAll(Pageable pageable, OrderFilterRequest request);
 
     void delete(Long id);
+
+    ProcedureResponse getById(Long id);
 }

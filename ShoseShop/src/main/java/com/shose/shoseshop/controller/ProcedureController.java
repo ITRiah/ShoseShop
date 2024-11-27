@@ -2,6 +2,7 @@ package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.ProcedureRequest;
+import com.shose.shoseshop.controller.response.CategoryResponse;
 import com.shose.shoseshop.controller.response.ProcedureResponse;
 import com.shose.shoseshop.controller.response.ResponseData;
 import com.shose.shoseshop.entity.Procedure_;
@@ -48,5 +49,10 @@ public class ProcedureController {
     public ResponseData<Void> delete(@RequestParam Long id) {
         procedureService.delete(id);
         return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete procedure is success!");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseData<ProcedureResponse> getById(@PathVariable Long id) {
+        return new ResponseData<>(procedureService.getById(id));
     }
 }

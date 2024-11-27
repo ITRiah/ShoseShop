@@ -1,8 +1,11 @@
 package com.shose.shoseshop.specification;
 
+import com.shose.shoseshop.constant.Role;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.entity.Category;
 import com.shose.shoseshop.entity.Category_;
+import com.shose.shoseshop.entity.Product;
+import com.shose.shoseshop.entity.Product_;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
@@ -29,6 +32,11 @@ public class CategorySpecification {
                 -> cb.lessThanOrEqualTo(root.get(Category_.CREATED_AT), dateTo);
     }
 
+    private static Specification<Category> isDeleted() {
+        return (Root<Category> root, CriteriaQuery<?> query, CriteriaBuilder cb)
+                -> cb.isFalse(root.get(Category_.IS_DELETED));
+    }
+
     public static Specification<Category> generateFilter(OrderFilterRequest request) {
         Specification<Category> specification = Specification.where(null);
         if (request == null) return specification;
@@ -40,6 +48,9 @@ public class CategorySpecification {
         }
         if (request.getDateTo() != null) {
             specification = specification.and((hasDateTo(request.getDateTo())));
+        }
+        if (request.getRole() != null && request.getRole().equals(Role.USER)) {
+            specification = specification.and(isDeleted());
         }
         return specification;
     }
