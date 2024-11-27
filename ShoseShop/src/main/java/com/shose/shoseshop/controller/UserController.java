@@ -41,7 +41,7 @@ public class UserController {
         return new ResponseData<>(HttpStatus.CREATED, "OTP has been sent to your email!");
     }
 
-    @PatchMapping("/password")
+    @PutMapping("/password")
     public ResponseData<Void> forgotPassword(@RequestParam("email") String email,
                                              @RequestParam("password") String password,
                                              @RequestParam("otp") String otp) {
@@ -49,7 +49,7 @@ public class UserController {
         return new ResponseData<>(HttpStatus.CREATED, "Your password has been updated!");
     }
 
-    @PatchMapping("/block")
+    @PutMapping("/block")
     public ResponseData<Void> forgotPassword(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return new ResponseData<>(HttpStatus.CREATED, "OTP has been sent to your email!");

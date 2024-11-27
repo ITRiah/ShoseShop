@@ -55,4 +55,10 @@ public class ProductController {
         productService.create(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Update product success!");
     }
+
+    @GetMapping("/{id}")
+    public ResponseData<ProductResponse> getById(@PathVariable Long id) {
+        return new ResponseData<>(productService.getById(id));
+    }
 }
+

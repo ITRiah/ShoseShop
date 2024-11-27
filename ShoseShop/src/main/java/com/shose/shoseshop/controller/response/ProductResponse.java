@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductResponse extends BaseEntity {
-    private Integer id;
+    private Long id;
     private ProcedureResponse procedure;
     private CategoryResponse category;
     private String name;

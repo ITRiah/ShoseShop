@@ -86,4 +86,10 @@ public class ProductServiceImpl implements ProductService {
         product.setImg(urlImage);
         productRepository.save(product);
     }
+
+    @Override
+    public ProductResponse getById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(product, ProductResponse.class);
+    }
 }

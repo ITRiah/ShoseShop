@@ -19,4 +19,6 @@ public interface ProductService {
     void delete(Long id);
 
     void update(ProductRequest productRequest) throws IOException;
+
+    ProductResponse getById(Long id);
 }
