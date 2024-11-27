@@ -40,7 +40,7 @@ public class OrderController {
         return new ResponseData<>(HttpStatus.CREATED, "Create order is success!");
     }
 
-    @PatchMapping
+    @PutMapping
     public ResponseData<Void> updateStatus(@RequestParam("id") Long id, @RequestParam("status") OrderStatus status) {
         orderService.update(id, status);
         return new ResponseData<>(HttpStatus.CREATED, "Update order is success!");
