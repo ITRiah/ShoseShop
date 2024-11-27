@@ -55,4 +55,10 @@ public class ProductController {
         productService.create(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Update product success!");
     }
+
+    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseData<Void> update(@RequestBody ProductRequest productRequest) throws IOException {
+        productService.create(productRequest);
+        return new ResponseData<>(HttpStatus.CREATED, "Update product success!");
+    }
 }

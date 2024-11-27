@@ -63,8 +63,8 @@ public class UserController {
         return new ResponseData<>(userService.getAll(pageable, request));
     }
 
-    @GetMapping
-    public ResponseData<UserResponse> getById(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    public ResponseData<UserResponse> getById(@PathVariable Long id) {
         return new ResponseData<>(userService.getById(id));
     }
 }
