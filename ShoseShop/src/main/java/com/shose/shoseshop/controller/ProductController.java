@@ -25,15 +25,10 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping
     public ResponseData<Void> create(@RequestBody ProductRequest productRequest) throws IOException {
         productService.create(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Create product success!");
-    }
-
-    @GetMapping("/{categoryId}")
-    public ResponseData<List<ProductResponse>> getProductByCategory(@PathVariable(value = "categoryId") Long categoryId) {
-        return new ResponseData<>(productService.getByCategory(categoryId));
     }
 
     @GetMapping

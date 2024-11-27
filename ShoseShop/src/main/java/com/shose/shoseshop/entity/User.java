@@ -15,7 +15,6 @@ import java.util.Date;
 @Table(name = "user")
 @Getter
 @Setter
-@Where(clause = "is_deleted = false")
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

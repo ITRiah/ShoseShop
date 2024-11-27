@@ -71,4 +71,10 @@ public class CategoryServiceImpl implements CategoryService {
         productRepository.saveAll(products);
         categoryRepository.save(category);
     }
+
+    @Override
+    public CategoryResponse getById(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(category, CategoryResponse.class);
+    }
 }

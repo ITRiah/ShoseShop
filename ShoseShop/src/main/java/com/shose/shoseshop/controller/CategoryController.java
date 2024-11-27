@@ -3,9 +3,9 @@ package com.shose.shoseshop.controller;
 import com.shose.shoseshop.controller.request.CategoryRequest;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.response.CategoryResponse;
+import com.shose.shoseshop.controller.response.ProductResponse;
 import com.shose.shoseshop.controller.response.ResponseData;
 import com.shose.shoseshop.entity.Category_;
-import com.shose.shoseshop.entity.User_;
 import com.shose.shoseshop.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -17,8 +17,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -51,5 +49,10 @@ public class CategoryController {
     public ResponseData<Void> delete(@RequestParam Long id) {
         categoryService.delete(id);
         return new ResponseData<>(HttpStatus.CREATED, "Delete category is success!");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseData<CategoryResponse> getById(@PathVariable Long id) {
+        return new ResponseData<>(categoryService.getById(id));
     }
 }
