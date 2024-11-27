@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse extends BaseEntity {
+    private Long id;
     private String username;
     private String password;
     private String firstName;
