@@ -23,4 +23,6 @@ public interface UserService {
     void updatePassword(String email, String newPassword, String otp);
 
     Page<UserResponse> getAll(Pageable pageable, UserFilterRequest request);
+
+    UserResponse getById(Long id);
 }

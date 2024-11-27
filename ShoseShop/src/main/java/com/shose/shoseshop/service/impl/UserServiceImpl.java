@@ -75,6 +75,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse getById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(user, UserResponse.class);
+    }
+
+    @Override
     public void forgotPassword(String email) {
         OTP otp = otpService.create(email);
         emailService.sendMail("Request to retrieve password!", "Your OTP: " + otp.getOtp(), email);

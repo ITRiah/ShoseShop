@@ -62,4 +62,9 @@ public class UserController {
                                                 @RequestBody(required = false) UserFilterRequest request) {
         return new ResponseData<>(userService.getAll(pageable, request));
     }
+
+    @GetMapping
+    public ResponseData<UserResponse> getById(@RequestParam Long id) {
+        return new ResponseData<>(userService.getById(id));
+    }
 }
