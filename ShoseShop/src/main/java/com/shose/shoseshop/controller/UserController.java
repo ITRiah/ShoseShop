@@ -55,7 +55,7 @@ public class UserController {
         return new ResponseData<>(HttpStatus.CREATED, "OTP has been sent to your email!");
     }
 
-    @GetMapping
+    @PostMapping("/search")
     public ResponseData<UserResponse> getAll(@PageableDefault(size = 10)
                                                 @SortDefault.SortDefaults({@SortDefault(sort = User_.CREATED_AT, direction = Sort.Direction.DESC)})
                                                 Pageable pageable,

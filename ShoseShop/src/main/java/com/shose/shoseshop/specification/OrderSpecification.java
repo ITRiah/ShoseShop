@@ -3,6 +3,7 @@ package com.shose.shoseshop.specification;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.entity.Order;
 import com.shose.shoseshop.entity.Order_;
+import com.shose.shoseshop.util.StringUtil;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
@@ -15,7 +16,7 @@ public class OrderSpecification {
     private static Specification<Order> hasFullname(String fullName) {
         return (Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             Path<String> fullNamePath = root.get(Order_.FULL_NAME);
-            return cb.like(fullNamePath, fullName);
+            return cb.like(fullNamePath, StringUtil.toLike(fullName));
         };
     }
 

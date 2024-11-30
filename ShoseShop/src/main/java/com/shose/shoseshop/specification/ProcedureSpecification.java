@@ -6,6 +6,7 @@ import com.shose.shoseshop.entity.Procedure;
 import com.shose.shoseshop.entity.Procedure_;
 import com.shose.shoseshop.entity.Product;
 import com.shose.shoseshop.entity.Product_;
+import com.shose.shoseshop.util.StringUtil;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
@@ -18,7 +19,7 @@ public class ProcedureSpecification {
     private static Specification<Procedure> hasFullname(String name) {
         return (Root<Procedure> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             Path<String> fullNamePath = root.get(Procedure_.NAME);
-            return cb.like(fullNamePath, name);
+            return cb.like(fullNamePath, StringUtil.toLike(name));
         };
     }
 

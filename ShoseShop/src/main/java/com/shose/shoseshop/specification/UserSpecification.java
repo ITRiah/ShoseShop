@@ -6,6 +6,7 @@ import com.shose.shoseshop.entity.Product;
 import com.shose.shoseshop.entity.Product_;
 import com.shose.shoseshop.entity.User;
 import com.shose.shoseshop.entity.User_;
+import com.shose.shoseshop.util.StringUtil;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
@@ -16,14 +17,14 @@ public class UserSpecification {
     private static Specification<User> hasEmail(String email) {
         return (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             Path<String> emailPath = root.get(User_.EMAIL);
-            return cb.like(emailPath, "%" + email + "%");
+            return cb.like(emailPath, StringUtil.toLike(email));
         };
     }
 
     private static Specification<User> hasUserName(String userName) {
         return (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             Path<String> emailPath = root.get(User_.USERNAME);
-            return cb.like(emailPath,"%" + userName + "%");
+            return cb.like(emailPath, StringUtil.toLike(userName));
         };
     }
 

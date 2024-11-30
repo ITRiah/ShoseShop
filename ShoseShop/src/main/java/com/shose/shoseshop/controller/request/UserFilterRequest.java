@@ -12,6 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserFilterRequest {
     private String email;
-    private String userName;
     private Role role;
 }

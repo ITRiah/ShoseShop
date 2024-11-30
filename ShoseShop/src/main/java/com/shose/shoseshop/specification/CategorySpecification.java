@@ -6,6 +6,7 @@ import com.shose.shoseshop.entity.Category;
 import com.shose.shoseshop.entity.Category_;
 import com.shose.shoseshop.entity.Product;
 import com.shose.shoseshop.entity.Product_;
+import com.shose.shoseshop.util.StringUtil;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
@@ -18,7 +19,7 @@ public class CategorySpecification {
     private static Specification<Category> hasFullname(String name) {
         return (Root<Category> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             Path<String> fullNamePath = root.get(Category_.NAME);
-            return cb.like(fullNamePath, name);
+            return cb.like(fullNamePath, StringUtil.toLike(name));
         };
     }
 
