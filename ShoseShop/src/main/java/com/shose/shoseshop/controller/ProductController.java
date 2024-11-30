@@ -26,12 +26,12 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping
-    public ResponseData<Void> create(@RequestBody ProductRequest productRequest) throws IOException {
+    public ResponseData<Void> create(@RequestBody ProductRequest productRequest) {
         productService.create(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Create product success!");
     }
 
-    @GetMapping
+    @PostMapping("/search")
     public ResponseData<ProductResponse> getAll(@PageableDefault(size = 10)
                                        @SortDefault.SortDefaults({@SortDefault(sort = Product_.NAME, direction = Sort.Direction.ASC)})
                                        Pageable pageable,
@@ -40,14 +40,14 @@ public class ProductController {
     }
 
     @DeleteMapping
-    public ResponseData<Void> create(@RequestParam Long id) throws IOException {
+    public ResponseData<Void> delete(@RequestParam Long id) throws IOException {
         productService.delete(id);
         return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete product success!");
     }
 
-    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseData<Void> update(@RequestBody ProductRequest productRequest) throws IOException {
-        productService.create(productRequest);
+    @PutMapping
+    public ResponseData<Void> update(@RequestBody ProductRequest productRequest) {
+        productService.update(productRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Update product success!");
     }
 

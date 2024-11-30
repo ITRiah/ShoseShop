@@ -2,7 +2,6 @@ package com.shose.shoseshop.service.impl;
 
 import com.shose.shoseshop.controller.request.ProductFilterRequest;
 import com.shose.shoseshop.controller.request.ProductRequest;
-import com.shose.shoseshop.controller.response.CategoryResponse;
 import com.shose.shoseshop.controller.response.ProductResponse;
 import com.shose.shoseshop.entity.*;
 import com.shose.shoseshop.repository.CategoryRepository;
@@ -22,7 +21,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,13 +31,12 @@ public class ProductServiceImpl implements ProductService {
     ProductRepository productRepository;
     ProcedureRepository procedureRepository;
     CategoryRepository categoryRepository;
-    UploadFileServiceImpl uploadFileService;
     ModelMapper modelMapper;
     ProductDetailRepository productDetailRepository;
 
     @Override
     @Transactional
-    public void create(ProductRequest productRequest) throws IOException {
+    public void create(ProductRequest productRequest) {
         Product product = new ModelMapper().map(productRequest, Product.class);
         Procedure procedure = procedureRepository.findById(productRequest.getProcedure())
                 .orElseThrow(EntityNotFoundException::new);
@@ -79,11 +76,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void update(ProductRequest productRequest) throws IOException {
+    public void update(ProductRequest productRequest) {
         Product product = productRepository.findById(productRequest.getId()).orElseThrow(EntityNotFoundException::new);
         modelMapper.map(productRequest, Product.class);
-        String urlImage = uploadFileService.uploadImage(productRequest.getFile());
-        product.setImg(urlImage);
+        product.setImg(productRequest.getImg());
         productRepository.save(product);
     }
 

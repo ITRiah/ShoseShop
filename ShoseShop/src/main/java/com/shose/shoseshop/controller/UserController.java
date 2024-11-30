@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public ResponseData<Void> forgotPassword(@RequestParam("email") String email,
+    public ResponseData<Void> updatePassword(@RequestParam("email") String email,
                                              @RequestParam("password") String password,
                                              @RequestParam("otp") String otp) {
         userService.updatePassword(email, password, otp);
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @PutMapping("/block")
-    public ResponseData<Void> forgotPassword(@RequestParam("id") Long id) {
+    public ResponseData<Void> blockUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return new ResponseData<>(HttpStatus.CREATED, "OTP has been sent to your email!");
     }

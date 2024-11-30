@@ -2,6 +2,7 @@ package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.VoucherRequest;
+import com.shose.shoseshop.controller.response.ProductResponse;
 import com.shose.shoseshop.controller.response.ResponseData;
 import com.shose.shoseshop.controller.response.VoucherResponse;
 import com.shose.shoseshop.entity.User_;
@@ -37,8 +38,8 @@ public class VoucherController {
 
     @PutMapping
     public ResponseData<Void> update(@Valid @RequestBody VoucherRequest voucherRequest) {
-        voucherService.create(voucherRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Update voucher is success!");
+        voucherService.update(voucherRequest);
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update voucher is success!");
     }
 
     @DeleteMapping
@@ -47,16 +48,16 @@ public class VoucherController {
         return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete voucher is success!");
     }
 
-    @GetMapping("/user")
-    public ResponseData<List<VoucherResponse>> getAllForUser() {
-        return new ResponseData<>(HttpStatus.CREATED, "Success!", voucherService.getAllForUser());
-    }
-
-    @GetMapping("/admin")
+    @PostMapping("/search")
     public ResponseData<VoucherResponse> getAllForAdmin(@PageableDefault(size = 10)
                                                         @SortDefault.SortDefaults({@SortDefault(sort = Voucher_.CREATED_AT, direction = Sort.Direction.DESC)})
                                                         Pageable pageable,
                                                         @RequestBody(required = false) OrderFilterRequest request) {
         return new ResponseData<>(voucherService.getAllForAdmin(pageable, request));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseData<VoucherResponse> getById(@PathVariable Long id) {
+        return new ResponseData<>(voucherService.getById(id));
     }
 }

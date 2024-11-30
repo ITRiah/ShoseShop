@@ -34,10 +34,10 @@ public class CategoryController {
     @PutMapping
     public ResponseData<Void> update(@Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.update(categoryRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Update category is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update category is success!");
     }
 
-    @GetMapping
+    @PostMapping("/search")
     public ResponseData<CategoryResponse> getAll(@PageableDefault(size = 10)
                                                  @SortDefault.SortDefaults({@SortDefault(sort = Category_.NAME, direction = Sort.Direction.DESC)})
                                                  Pageable pageable,
@@ -48,7 +48,7 @@ public class CategoryController {
     @DeleteMapping
     public ResponseData<Void> delete(@RequestParam Long id) {
         categoryService.delete(id);
-        return new ResponseData<>(HttpStatus.CREATED, "Delete category is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete category is success!");
     }
 
     @GetMapping("/{id}")

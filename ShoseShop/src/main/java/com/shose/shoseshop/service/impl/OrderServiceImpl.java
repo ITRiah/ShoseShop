@@ -4,6 +4,8 @@ import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
 import com.shose.shoseshop.controller.response.OrderResponse;
+import com.shose.shoseshop.controller.response.ProductStatisticResponse;
+import com.shose.shoseshop.controller.response.StatisticResponse;
 import com.shose.shoseshop.controller.response.UserResponse;
 import com.shose.shoseshop.entity.*;
 import com.shose.shoseshop.repository.*;
@@ -116,5 +118,15 @@ public class OrderServiceImpl implements OrderService {
         Specification<Order> spec = OrderSpecification.generateFilter(request);
         Page<Order> orderPage = orderRepository.findAll(spec, pageable);
         return orderPage.map(order -> modelMapper.map(order, OrderResponse.class));
+    }
+
+    @Override
+    public List<StatisticResponse> statistic(Long year) {
+        return orderRepository.findMonthlyRevenue(year, OrderStatus.DELIVERED);
+    }
+
+    @Override
+    public List<ProductStatisticResponse> findProductSalesStatistic(Long month, Long year) {
+        return orderRepository.findProductSalesStatistic(month, year, OrderStatus.DELIVERED);
     }
 }

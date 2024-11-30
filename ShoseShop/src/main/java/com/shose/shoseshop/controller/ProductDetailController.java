@@ -2,7 +2,9 @@ package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.controller.request.ProductDetailRequest;
 import com.shose.shoseshop.controller.request.ProductRequest;
+import com.shose.shoseshop.controller.response.ProductDetailResponse;
 import com.shose.shoseshop.controller.response.ResponseData;
+import com.shose.shoseshop.controller.response.VoucherResponse;
 import com.shose.shoseshop.service.ProductDetailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +24,25 @@ public class ProductDetailController {
     ProductDetailService productDetailService;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseData<String> create(@Valid @ModelAttribute ProductDetailRequest productDetailRequest) throws IOException {
+    public ResponseData<String> create(@Valid @ModelAttribute ProductDetailRequest productDetailRequest) {
         productDetailService.create(productDetailRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Create product detail success!");
     }
 
     @PutMapping
-    public ResponseData<String> update(@Valid @ModelAttribute ProductDetailRequest productDetailRequest) throws IOException {
+    public ResponseData<String> update(@Valid @ModelAttribute ProductDetailRequest productDetailRequest) {
         productDetailService.update(productDetailRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Update product detail success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update product detail success!");
+    }
+
+    @DeleteMapping
+    public ResponseData<String> delete(@RequestParam Long id) {
+        productDetailService.delete(id);
+        return new ResponseData<>(HttpStatus.CREATED, "Delete product detail success!");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseData<ProductDetailResponse> getById(@PathVariable Long id) {
+        return new ResponseData<>(productDetailService.getById(id));
     }
 }

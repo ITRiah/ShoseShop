@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +26,12 @@ public class ProductDetailImpl implements ProductDetailService {
     ProductDetailRepository productDetailRepository;
     UploadImageService uploadImageService;
     ProductDetailRepository getProductDetailRepository;
+    ModelMapper modelMapper;
 
     @Override
-    public void create(ProductDetailRequest productDetailRequest) throws IOException {
-        String urlImage = uploadImageService.uploadImage(productDetailRequest.getFile());
+    public void create(ProductDetailRequest productDetailRequest) {
         ProductDetail productDetail = new ModelMapper().map(productDetailRequest, ProductDetail.class);
-        productDetail.setImg(urlImage);
+        productDetail.setImg(productDetailRequest.getImg());
         productDetailRepository.save(productDetail);
     }
 
@@ -43,11 +44,23 @@ public class ProductDetailImpl implements ProductDetailService {
     }
 
     @Override
-    public void update(ProductDetailRequest productDetailRequest) throws IOException {
-        ProductDetail productDetail = productDetailRepository.findById(productDetailRequest.getId()).orElseThrow(EntityExistsException::new);
-        productDetail = new ModelMapper().map(productDetailRequest, ProductDetail.class);
-        String urlImage = uploadImageService.uploadImage(productDetailRequest.getFile());
-        productDetail.setImg(urlImage);
+    public void update(ProductDetailRequest productDetailRequest) {
+        ProductDetail productDetail = productDetailRepository.findById(productDetailRequest.getId()).orElseThrow(EntityNotFoundException::new);
+        modelMapper.map(productDetailRequest, productDetail);
+        productDetail.setImg(productDetailRequest.getImg());
         productDetailRepository.save(productDetail);
+    }
+
+    @Override
+    public void delete(Long id) {
+        ProductDetail productDetail = productDetailRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        productDetail.markAsDelete();
+        productDetailRepository.save(productDetail);
+    }
+
+    @Override
+    public ProductDetailResponse getById(Long id) {
+        ProductDetail productDetail = productDetailRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(productDetail, ProductDetailResponse.class);
     }
 }

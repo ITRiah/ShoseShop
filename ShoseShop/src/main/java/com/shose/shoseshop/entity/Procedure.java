@@ -13,7 +13,6 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "procedures")
-@Where(clause = "is_deleted = false")
 public class Procedure extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -37,7 +37,7 @@ public class ProcedureController {
         return new ResponseData<>(HttpStatus.NO_CONTENT, "Update procedure is success!");
     }
 
-    @GetMapping
+    @PostMapping("/search")
     public ResponseData<ProcedureResponse> getAll(@PageableDefault(size = 10)
                                                  @SortDefault.SortDefaults({@SortDefault(sort = Procedure_.CREATED_AT, direction = Sort.Direction.DESC)})
                                                  Pageable pageable,

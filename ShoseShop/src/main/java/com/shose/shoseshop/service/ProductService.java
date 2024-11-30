@@ -6,11 +6,10 @@ import com.shose.shoseshop.controller.response.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
-    void create(ProductRequest productRequest) throws IOException;
+    void create(ProductRequest productRequest);
 
     List<ProductResponse> getByCategory(Long categoryId);
 
@@ -18,7 +17,7 @@ public interface ProductService {
 
     void delete(Long id);
 
-    void update(ProductRequest productRequest) throws IOException;
+    void update(ProductRequest productRequest);
 
     ProductResponse getById(Long id);
 }

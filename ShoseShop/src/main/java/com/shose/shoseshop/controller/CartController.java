@@ -27,11 +27,12 @@ public class CartController {
 
     @GetMapping
     public ResponseData<CartResponse> getCart() {
-        return new ResponseData<>(HttpStatus.CREATED, "Add product to cart is success!", cartService.getCart());
+        return new ResponseData<>(cartService.getCart());
     }
 
     @DeleteMapping("/cart-details")
     public ResponseData<Void> deleteCartDetails(@RequestParam Set<Long> ids) {
         cartService.deleteCartDetails(ids);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete cart response to cart is success!");
-    }}
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete cart detail is success!");
+    }
+}

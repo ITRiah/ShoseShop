@@ -20,7 +20,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "orders")
-@Where(clause = "is_deleted = false")
 public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +31,13 @@ public class Order extends BaseEntity {
 
     private String fullName;
     private String phone;
+    @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.PENDING;
     private String reason;
-    private Date orderDate = new Date();
     private String shippingAddress;
+    @Enumerated(EnumType.STRING)
     private ShippingMethod shippingMethod;
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     private BigDecimal totalAmount;
     private String note;

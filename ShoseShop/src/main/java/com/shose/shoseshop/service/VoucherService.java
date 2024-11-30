@@ -38,13 +38,6 @@ public class VoucherService {
         return voucherPage.map(voucher -> modelMapper.map(voucher, VoucherResponse.class));
     }
 
-    public List<VoucherResponse> getAllForUser() {
-        List<Voucher> vouchers = voucherRepository.findByIsDeletedFalse();
-        return vouchers.stream()
-                .map(voucher -> modelMapper.map(voucher, VoucherResponse.class))
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public void update(VoucherRequest voucherRequest) {
         Voucher voucher = voucherRepository.findById(voucherRequest.getId()).orElseThrow(EntityNotFoundException::new);
@@ -57,5 +50,10 @@ public class VoucherService {
         Voucher voucher = voucherRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         voucher.markAsDelete();
         voucherRepository.save(voucher);
+    }
+
+    public VoucherResponse getById(Long id) {
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(voucher, VoucherResponse.class);
     }
 }
