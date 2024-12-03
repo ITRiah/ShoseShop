@@ -19,6 +19,7 @@ public class ProductDetailRequest {
     private String size;
     private Integer quantity;
     private String img;
+    private Long productId;
     private BigDecimal price;
 
     @JsonIgnore
