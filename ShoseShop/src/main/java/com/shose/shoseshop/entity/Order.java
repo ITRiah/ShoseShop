@@ -13,6 +13,7 @@ import org.hibernate.annotations.Where;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -41,4 +42,6 @@ public class Order extends BaseEntity {
     private PaymentMethod paymentMethod;
     private BigDecimal totalAmount;
     private String note;
+    @OneToMany
+    List<OrderDetail> orderDetails;
 }

@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ProductDetailRequest {
     private Long id;
-    private Long productId;
     private String color;
     private String size;
     private Integer quantity;
