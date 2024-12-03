@@ -34,7 +34,7 @@ public class ProcedureServiceImpl implements ProcedureService {
     @Override
     @Transactional
     public void create(ProcedureRequest procedureRequest) {
-        procedureRepository.save(new Procedure(procedureRequest.getName()));
+        procedureRepository.save(modelMapper.map(procedureRequest, Procedure.class));
     }
 
     @Override

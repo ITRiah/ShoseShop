@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void create(CategoryRequest categoryRequest) {
-        categoryRepository.save(new Category(categoryRequest.getName()));
+        categoryRepository.save(modelMapper.map(categoryRequest, Category.class));
     }
 
     @Override

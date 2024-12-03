@@ -16,7 +16,7 @@ public class Category extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String img;
     @Column(length = 254, unique = true, nullable = false)
     private String name;
 

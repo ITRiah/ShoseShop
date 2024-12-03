@@ -2,17 +2,13 @@ package com.shose.shoseshop.specification;
 
 import com.shose.shoseshop.constant.Role;
 import com.shose.shoseshop.controller.request.ProductFilterRequest;
-import com.shose.shoseshop.entity.Procedure;
-import com.shose.shoseshop.entity.Procedure_;
-import com.shose.shoseshop.entity.Product;
-import com.shose.shoseshop.entity.Product_;
+import com.shose.shoseshop.entity.*;
 import com.shose.shoseshop.util.QueryUtils;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
+import com.shose.shoseshop.util.StringUtil;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class ProductSpecification {
@@ -29,6 +25,23 @@ public class ProductSpecification {
                 -> cb.isFalse(root.get(Product_.IS_DELETED));
     }
 
+    private static Specification<Product> hasName(String name) {
+        return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            Path<String> namePath = root.get(Product_.NAME);
+            return cb.like(namePath, StringUtil.toLike(name));
+        };
+    }
+
+    private static Specification<Product> hasPriceBigger(BigDecimal priceBigger) {
+        return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb)
+                -> cb.greaterThanOrEqualTo(root.get(Product_.PRICE_RANGE), priceBigger);
+    }
+
+    private static Specification<Product> hasPriceLower(BigDecimal priceLower) {
+        return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb)
+                -> cb.lessThanOrEqualTo(root.get(Product_.PRICE_RANGE), priceLower);
+    }
+
     public static Specification<Product> generateFilterProducts(ProductFilterRequest request) {
         Specification<Product> specification = Specification.where(null);
         if (request == null) return specification;
@@ -37,6 +50,15 @@ public class ProductSpecification {
         }
         if (request.getRole() != null && request.getRole().equals(Role.USER)) {
             specification = specification.and(isDeleted());
+        }
+        if (request.getName() != null) {
+            specification = specification.and(hasName(request.getName()));
+        }
+        if (request.getPriceBigger() != null) {
+            specification = specification.and(hasPriceBigger(request.getPriceBigger()));
+        }
+        if (request.getPriceLower() != null) {
+            specification = specification.and(hasPriceLower(request.getPriceLower()));
         }
         return specification;
     }

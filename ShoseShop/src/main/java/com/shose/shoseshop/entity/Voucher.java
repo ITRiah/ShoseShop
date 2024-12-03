@@ -23,6 +23,7 @@ public class Voucher extends BaseEntity{
     private Long id;
     @Column(unique = true)
     private String code;
+    private String img;
     private Integer value;
     private Integer quantity;
     private BigDecimal maxMoney;

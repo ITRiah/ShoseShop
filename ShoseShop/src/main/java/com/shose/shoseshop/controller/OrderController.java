@@ -3,17 +3,13 @@ package com.shose.shoseshop.controller;
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
-import com.shose.shoseshop.controller.request.UserFilterRequest;
 import com.shose.shoseshop.controller.response.*;
 import com.shose.shoseshop.entity.Order_;
-import com.shose.shoseshop.entity.User_;
 import com.shose.shoseshop.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,9 +17,6 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -65,4 +58,10 @@ public class OrderController {
             @RequestParam("month") Long month) {
         return orderService.findProductSalesStatistic(year, month);
     }
+
+    @GetMapping("/{id}")
+    public ResponseData<OrderResponse> getById(@PathVariable Long id) {
+        return new ResponseData<>(orderService.getById(id));
+    }
+
 }

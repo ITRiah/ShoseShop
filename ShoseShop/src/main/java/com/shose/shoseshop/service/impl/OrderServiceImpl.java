@@ -129,4 +129,10 @@ public class OrderServiceImpl implements OrderService {
     public List<ProductStatisticResponse> findProductSalesStatistic(Long month, Long year) {
         return orderRepository.findProductSalesStatistic(month, year, OrderStatus.DELIVERED);
     }
+
+    @Override
+    public OrderResponse getById(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(order, OrderResponse.class);
+    }
 }

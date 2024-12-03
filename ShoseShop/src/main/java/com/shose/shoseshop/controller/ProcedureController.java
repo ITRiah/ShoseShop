@@ -2,7 +2,6 @@ package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.ProcedureRequest;
-import com.shose.shoseshop.controller.response.CategoryResponse;
 import com.shose.shoseshop.controller.response.ProcedureResponse;
 import com.shose.shoseshop.controller.response.ResponseData;
 import com.shose.shoseshop.entity.Procedure_;
