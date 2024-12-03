@@ -23,14 +23,14 @@ public class ProductDetailController {
 
     ProductDetailService productDetailService;
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseData<String> create(@Valid @ModelAttribute ProductDetailRequest productDetailRequest) {
+    @PostMapping
+    public ResponseData<String> create(@RequestBody ProductDetailRequest productDetailRequest) {
         productDetailService.create(productDetailRequest);
         return new ResponseData<>(HttpStatus.CREATED, "Create product detail success!");
     }
 
     @PutMapping
-    public ResponseData<String> update(@Valid @ModelAttribute ProductDetailRequest productDetailRequest) {
+    public ResponseData<String> update(@RequestBody ProductDetailRequest productDetailRequest) {
         productDetailService.update(productDetailRequest);
         return new ResponseData<>(HttpStatus.NO_CONTENT, "Update product detail success!");
     }
