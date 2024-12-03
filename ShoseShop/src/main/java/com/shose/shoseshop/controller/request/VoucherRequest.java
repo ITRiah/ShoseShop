@@ -15,6 +15,7 @@ import java.util.Date;
 public class VoucherRequest {
     private Long id;
     private String code;
+    private String img;
     private Integer value;
     private Integer quantity;
     private BigDecimal maxMoney;
