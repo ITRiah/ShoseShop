@@ -25,4 +25,5 @@ public interface UserService {
     Page<UserResponse> getAll(Pageable pageable, UserFilterRequest request);
 
     UserResponse getById(Long id);
+    void update(UserRequest UserRequest);
 }

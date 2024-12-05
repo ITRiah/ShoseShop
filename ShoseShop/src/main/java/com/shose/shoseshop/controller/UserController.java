@@ -67,4 +67,10 @@ public class UserController {
     public ResponseData<UserResponse> getById(@PathVariable Long id) {
         return new ResponseData<>(userService.getById(id));
     }
+
+    @PutMapping
+    public ResponseData<Void> update(@RequestBody UserRequest userRequest) {
+        userService.update(userRequest);
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update user is success!");
+    }
 }

@@ -22,6 +22,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +80,14 @@ public class UserServiceImpl implements UserService {
     public UserResponse getById(Long id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(user, UserResponse.class);
+    }
+
+    @Override
+    public void update(UserRequest userRequest) {
+        UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        modelMapper.map(userRequest, user);
+        userRepository.save(user);
     }
 
     @Override

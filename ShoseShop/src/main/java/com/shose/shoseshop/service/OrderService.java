@@ -3,6 +3,7 @@ package com.shose.shoseshop.service;
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
+import com.shose.shoseshop.controller.request.UserRequest;
 import com.shose.shoseshop.controller.response.OrderResponse;
 import com.shose.shoseshop.controller.response.ProductStatisticResponse;
 import com.shose.shoseshop.controller.response.StatisticResponse;
@@ -18,4 +19,5 @@ public interface OrderService {
     List<StatisticResponse> statistic(Long month, Long year);
     List<ProductStatisticResponse>findProductSalesStatistic(Long month, Long year);
     OrderResponse getById(Long id);
+    List<OrderResponse> getByUser();
 }

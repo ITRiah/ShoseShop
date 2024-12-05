@@ -135,4 +135,13 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return modelMapper.map(order, OrderResponse.class);
     }
+
+    @Override
+    public List<OrderResponse> getByUser() {
+        UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
+        List<Order> orders = orderRepository.findByUser_Id(user.getId());
+        return orders.stream()
+                .map(order -> modelMapper.map(order, OrderResponse.class))
+                .collect(Collectors.toList());    }
 }

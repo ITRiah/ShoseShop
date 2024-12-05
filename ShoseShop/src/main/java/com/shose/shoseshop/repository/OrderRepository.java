@@ -38,4 +38,6 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     List<ProductStatisticResponse> findProductSalesStatistic(@Param("year") Long year,
                                                              @Param("month") Long month,
                                                              @Param("status") OrderStatus status);
+
+    List<Order> findByUser_Id(Long id);
 }

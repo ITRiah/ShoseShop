@@ -65,4 +65,8 @@ public class OrderController {
         return new ResponseData<>(orderService.getById(id));
     }
 
+    @GetMapping("/users")
+    public ResponseData<List<OrderResponse>> getByUser() {
+        return new ResponseData<>(orderService.getByUser());
+    }
 }
