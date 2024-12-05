@@ -42,6 +42,6 @@ public class Order extends BaseEntity {
     private PaymentMethod paymentMethod;
     private BigDecimal totalAmount;
     private String note;
-    @OneToMany
+    @OneToMany(mappedBy = "order")
     List<OrderDetail> orderDetails;
 }

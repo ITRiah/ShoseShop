@@ -13,8 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OrderDetailResponse extends BaseEntity {
     private Long id;
-    @JsonIgnoreProperties
-    private OrderResponse order;
     private ProductDetailResponse productDetail;
     private Long quantity;
 }

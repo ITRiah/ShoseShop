@@ -20,5 +20,4 @@ public class ProductDetailResponse {
     private Integer quantity;
     private String img;
     private BigDecimal price;
-    private Boolean isDeleted;
 }
