@@ -37,7 +37,7 @@ public class UserSpecification {
         Specification<User> specification = Specification.where(null);
         if (request == null) return specification;
         if (request.getEmail() != null) {
-            specification = specification.and((hasUserName(request.getEmail()))).and(hasEmail(request.getEmail()));
+            specification = specification.and((hasUserName(request.getEmail()))).or(hasEmail(request.getEmail()));
         }
         if (request.getRole() != null && request.getRole().equals(Role.USER)) {
             specification = specification.and(isDeleted());
