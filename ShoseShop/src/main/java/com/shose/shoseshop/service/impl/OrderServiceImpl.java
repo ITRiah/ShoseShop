@@ -144,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<ProductStatisticResponse> findProductSalesStatistic(Long month, Long year) {
-        return orderRepository.findProductSalesStatistic(month, year, OrderStatus.DELIVERED);
+        return orderRepository.findProductSalesStatistic(year, month, OrderStatus.DELIVERED);
     }
 
     @Override
