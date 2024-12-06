@@ -27,13 +27,12 @@ public class ExportController {
     StatisticExportService exportService;
 
     @GetMapping("/statistics")
-    public ResponseEntity<byte[]> exportStatisticsToExcel(@RequestParam Long year,
-                                                          @RequestParam Long month) throws IOException {
+    public ResponseEntity<byte[]> exportStatisticsToExcel(@RequestParam Long year) throws IOException {
         List<StatisticResponse> statistics = orderService.statistic(year);
 
         byte[] excelData = exportService.exportStatisticsToExcel(statistics);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentDispositionFormData("attachment", "ThongKeDoanhThu" + month + year + ".xlsx");
+        headers.setContentDispositionFormData("attachment", "ThongKeDoanhThu" + year + ".xlsx");
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         return ResponseEntity.ok()
                 .headers(headers)

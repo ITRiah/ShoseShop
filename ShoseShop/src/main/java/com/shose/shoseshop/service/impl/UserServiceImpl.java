@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(UserRequest userRequest) {
         UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
         modelMapper.map(userRequest, user);
         userRepository.save(user);
     }

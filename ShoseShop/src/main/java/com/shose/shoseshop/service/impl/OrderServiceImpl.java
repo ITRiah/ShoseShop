@@ -26,8 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,8 +121,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<StatisticResponse> statistic(Long year) {
-        return orderRepository.findMonthlyRevenue(year, OrderStatus.DELIVERED);
+        // Lấy danh sách doanh thu từ cơ sở dữ liệu
+        List<StatisticResponse> rawData = orderRepository.findMonthlyRevenue(year, OrderStatus.DELIVERED);
+
+        // Tạo danh sách kết quả với giá trị mặc định cho tất cả 12 tháng
+        Map<Integer, StatisticResponse> resultMap = new HashMap<>();
+        for (int month = 1; month <= 12; month++) {
+            resultMap.put(month, new StatisticResponse(year.intValue(), month, BigDecimal.ZERO));
+        }
+
+        // Gộp dữ liệu từ cơ sở dữ liệu vào danh sách
+        for (StatisticResponse data : rawData) {
+            resultMap.put(data.getMonth(), data);
+        }
+
+        // Trả về danh sách kết quả, sắp xếp theo tháng
+        return resultMap.values().stream()
+                .sorted(Comparator.comparing(StatisticResponse::getMonth))
+                .toList();
     }
+
 
     @Override
     public List<ProductStatisticResponse> findProductSalesStatistic(Long month, Long year) {
