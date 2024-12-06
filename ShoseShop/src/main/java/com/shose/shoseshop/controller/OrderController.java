@@ -49,14 +49,14 @@ public class OrderController {
 
     @GetMapping("/statistic")
     public ResponseData<List<StatisticResponse>> getAll(@RequestParam Long year) {
-        return new ResponseData<>(HttpStatus.ACCEPTED, "success!", orderService.statistic(year));
+        return new ResponseData<>(HttpStatus.OK, "success!", orderService.statistic(year));
     }
 
     @GetMapping("/product-sales")
-    public List<ProductStatisticResponse> getProductSalesStatistics(
+    public ResponseData<List<ProductStatisticResponse>> getProductSalesStatistics(
             @RequestParam("year") Long year,
             @RequestParam("month") Long month) {
-        return orderService.findProductSalesStatistic(year, month);
+        return new ResponseData<>(HttpStatus.OK, "success!", orderService.findProductSalesStatistic(month, year));
     }
 
     @GetMapping("/{id}")
