@@ -49,7 +49,7 @@ public class OrderController {
 
     @GetMapping("/statistic")
     public ResponseData<List<StatisticResponse>> getAll(@RequestParam Long year) {
-        return new ResponseData<>(orderService.statistic(year));
+        return new ResponseData<>(HttpStatus.ACCEPTED, "success!", orderService.statistic(year));
     }
 
     @GetMapping("/product-sales")
