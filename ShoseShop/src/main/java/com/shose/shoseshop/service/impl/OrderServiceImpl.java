@@ -144,7 +144,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<ProductStatisticResponse> findProductSalesStatistic(Long month, Long year) {
-        return orderRepository.findProductSalesStatistic(year, month, OrderStatus.DELIVERED);
+        List<ProductStatisticResponse> fullList = orderRepository.findProductSalesStatistic(year, month, OrderStatus.DELIVERED);
+        return fullList.size() > 5 ? fullList.subList(0, 5) : fullList;
     }
 
     @Override
