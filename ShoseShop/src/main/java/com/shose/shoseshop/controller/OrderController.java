@@ -48,9 +48,8 @@ public class OrderController {
     }
 
     @GetMapping("/statistic")
-    public ResponseData<List<StatisticResponse>> getAll(@RequestParam Long month,
-                                                        @RequestParam Long year) {
-        return new ResponseData<>(orderService.statistic(month, year));
+    public ResponseData<List<StatisticResponse>> getAll(@RequestParam Long year) {
+        return new ResponseData<>(orderService.statistic(year));
     }
 
     @GetMapping("/product-sales")

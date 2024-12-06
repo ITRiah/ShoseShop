@@ -8,5 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ProcedureRequest {
     private Long id;
+    private String img;
     private String name;
 }

@@ -29,7 +29,7 @@ public class ExportController {
     @GetMapping("/statistics")
     public ResponseEntity<byte[]> exportStatisticsToExcel(@RequestParam Long year,
                                                           @RequestParam Long month) throws IOException {
-        List<StatisticResponse> statistics = orderService.statistic(month, year);
+        List<StatisticResponse> statistics = orderService.statistic(year);
 
         byte[] excelData = exportService.exportStatisticsToExcel(statistics);
         HttpHeaders headers = new HttpHeaders();

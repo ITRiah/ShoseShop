@@ -16,7 +16,7 @@ public interface OrderService {
     void create(OrderRequest orderRequest);
     void update(Long id, OrderStatus status);
     Page<OrderResponse> getAll(Pageable pageable, OrderFilterRequest request);
-    List<StatisticResponse> statistic(Long month, Long year);
+    List<StatisticResponse> statistic(Long year);
     List<ProductStatisticResponse>findProductSalesStatistic(Long month, Long year);
     OrderResponse getById(Long id);
     List<OrderResponse> getByUser();
