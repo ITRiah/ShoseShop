@@ -16,17 +16,22 @@ public class ProductSpecification {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> cb.exists(
                 QueryUtils.buildSubQuery(
                         Procedure.class, root, query, (Root<Product> rootParent, Subquery<Procedure> subQuery, Root<Procedure> subRoot)
-                                -> QueryUtils.and(cb, cb.equal(subRoot.get(Procedure_.ID), root.get(Product_.PROCEDURE)),
-                                subRoot.get(Procedure_.ID).in(procedureIds))));
+                                -> QueryUtils.and(cb,
+                                cb.equal(subRoot.get(Procedure_.ID), root.get(Product_.PROCEDURE).get(Procedure_.ID)),
+                                subRoot.get(Procedure_.ID).in(procedureIds))
+                ));
     }
 
     private static Specification<Product> hasCategoryIdIn(Set<Long> categoryIds) {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> cb.exists(
                 QueryUtils.buildSubQuery(
-                        Procedure.class, root, query, (Root<Product> rootParent, Subquery<Procedure> subQuery, Root<Procedure> subRoot)
-                                -> QueryUtils.and(cb, cb.equal(subRoot.get(Procedure_.ID), root.get(Product_.CATEGORY)),
-                                subRoot.get(Procedure_.ID).in(categoryIds))));
+                        Category.class, root, query, (Root<Product> rootParent, Subquery<Category> subQuery, Root<Category> subRoot)
+                                -> QueryUtils.and(cb,
+                                cb.equal(subRoot.get(Category_.ID), root.get(Product_.CATEGORY).get(Category_.ID)),
+                                subRoot.get(Category_.ID).in(categoryIds))
+                ));
     }
+
 
     private static Specification<Product> isDeleted() {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb)
