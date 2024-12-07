@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hóa Đơn Đặt Hàng</title>
+</head>
+<body>
+<h1 style="color: #2a7ae2;">Cảm ơn bạn đã đặt hàng!</h1>
+<p>Xin chào <strong th:text="${fullName}">[Tên Khách Hàng]</strong>,</p>
+<p>Đây là thông tin hóa đơn của bạn:</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+    <tr>
+        <th>Hình ảnh</th>
+        <th>Sản phẩm</th>
+        <th>Màu sắc</th>
+        <th>Kích thước</th>
+        <th>Số lượng</th>
+        <th>Giá</th>
+        <th>Thành tiền</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="detail : ${orderDetails}">
+        <td>
+            <img th:src="${detail.image}" alt="Hình ảnh sản phẩm" style="width: 100px; height: auto;" />
+        </td>
+        <td th:text="${detail.productName}">[Tên sản phẩm]</td>
+        <td th:text="${detail.color}">[Màu sắc]</td>
+        <td th:text="${detail.size}">[Kích thước]</td>
+        <td th:text="${detail.quantity}">[Số lượng]</td>
+        <td th:text="${detail.price}">[Giá]</td>
+        <td th:text="${detail.total}">[Thành tiền]</td>
+    </tr>
+    </tbody>
+</table>
+
+<p><strong>Tổng cộng:</strong> <span th:text="${totalAmount}">[Tổng cộng]</span></p>
+<p>Cảm ơn bạn đã mua hàng tại cửa hàng chúng tôi!</p>
+</body>
+</html>

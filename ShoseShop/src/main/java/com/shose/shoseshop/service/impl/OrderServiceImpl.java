@@ -6,16 +6,16 @@ import com.shose.shoseshop.controller.request.OrderRequest;
 import com.shose.shoseshop.controller.response.OrderResponse;
 import com.shose.shoseshop.controller.response.ProductStatisticResponse;
 import com.shose.shoseshop.controller.response.StatisticResponse;
-import com.shose.shoseshop.controller.response.UserResponse;
 import com.shose.shoseshop.entity.*;
 import com.shose.shoseshop.repository.*;
+import com.shose.shoseshop.service.CartService;
+import com.shose.shoseshop.service.EmailService;
 import com.shose.shoseshop.service.OrderService;
 import com.shose.shoseshop.specification.OrderSpecification;
-import com.shose.shoseshop.specification.UserSpecification;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -36,9 +35,11 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
     OrderDetailRepository orderDetailRepository;
     CartDetailRepository cartDetailRepository;
+    CartService cartService;
     UserRepository userRepository;
     VoucherRepository voucherRepository;
     ModelMapper modelMapper;
+    EmailService emailService;
 
     @Override
     @Transactional
@@ -49,8 +50,12 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetail> orderDetails = mapCartDetailsToOrderDetails(cartDetails, order);
         BigDecimal totalAmount = calculateTotalAmount(orderDetails, orderRequest);
         order.setTotalAmount(totalAmount);
-        saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails);
-    }
+        saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails, orderRequest.getCartDetailIds());
+        try {
+            emailService.sendInvoiceWithAttachment(user.getEmail(), order.getFullName(), totalAmount, orderDetails);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }    }
 
     private User getUserFromContext() {
         UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -96,11 +101,12 @@ public class OrderServiceImpl implements OrderService {
         return total;
     }
 
-    private void saveOrderAndDetailsAndCartDetails(Order order, List<OrderDetail> orderDetails, List<CartDetail> cartDetails) {
+    private void saveOrderAndDetailsAndCartDetails(Order order, List<OrderDetail> orderDetails, List<CartDetail> cartDetails, Set<Long> cartDetailIds) {
         cartDetails.forEach(BaseEntity::markAsDelete);
         cartDetailRepository.saveAll(cartDetails);
         orderDetailRepository.saveAll(orderDetails);
         orderRepository.save(order);
+        cartService.deleteCartDetails(cartDetailIds);
     }
 
 
