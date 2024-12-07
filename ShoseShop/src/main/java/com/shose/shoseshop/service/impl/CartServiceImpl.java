@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -37,16 +38,25 @@ public class CartServiceImpl implements CartService {
         User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
         Cart cart = cartRepository.findByUser_Id(user.getId()).orElseThrow(EntityNotFoundException::new);
         ProductDetail productDetail = productDetailRepository.findById(productDetailId).orElseThrow(EntityNotFoundException::new);
-        CartDetail cartDetail= new CartDetail();
-        cartDetail.setProductDetail(productDetail);
-        cartDetail.setQuantity(quantity);
-        cartDetail.setCartId(cart.getId());
-        cartDetail.setProductName(productDetail.getProduct().getName());
         List<CartDetail> cartDetails = cart.getCartDetails();
-        cartDetails.add(cartDetail);
-        cartDetailRepository.save(cartDetail);
-        cartRepository.save(cart);
+        Optional<CartDetail> existingCartDetail = cartDetails.stream()
+                .filter(cd -> cd.getProductDetail().getId().equals(productDetailId))
+                .findFirst();
+
+        if (existingCartDetail.isPresent()) {
+            CartDetail cartDetail = existingCartDetail.get();
+            cartDetail.setQuantity(cartDetail.getQuantity() + quantity);
+            cartDetailRepository.save(cartDetail);
+        } else {
+            CartDetail newCartDetail = new CartDetail();
+            newCartDetail.setProductDetail(productDetail);
+            newCartDetail.setQuantity(quantity);
+            newCartDetail.setCartId(cart.getId());
+            newCartDetail.setProductName(productDetail.getProduct().getName());
+            cartDetailRepository.save(newCartDetail);
+        }
     }
+
 
     @Override
     public CartResponse getCart() {
