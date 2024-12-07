@@ -88,8 +88,9 @@ public class UserServiceImpl implements UserService {
     public void update(UserRequest userRequest) {
         UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
+        String password = user.getPassword();
         modelMapper.map(userRequest, user);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(password);
         userRepository.save(user);
     }
 
