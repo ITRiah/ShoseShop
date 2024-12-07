@@ -73,4 +73,9 @@ public class UserController {
         userService.update(userRequest);
         return new ResponseData<>(HttpStatus.NO_CONTENT, "Update user is success!");
     }
+
+    @GetMapping
+    public ResponseData<UserResponse> getLoginUser() {
+        return new ResponseData<>(HttpStatus.OK, "Success", userService.getLoginUser());
+    }
 }

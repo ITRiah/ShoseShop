@@ -26,4 +26,5 @@ public interface UserService {
 
     UserResponse getById(Long id);
     void update(UserRequest UserRequest);
+    UserResponse getLoginUser();
 }

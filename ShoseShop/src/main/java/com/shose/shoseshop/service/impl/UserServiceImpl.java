@@ -93,6 +93,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse getLoginUser() {
+        UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(user, UserResponse.class);
+    }
+
+    @Override
     public void forgotPassword(String email) {
         userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
@@ -105,4 +112,6 @@ public class UserServiceImpl implements UserService {
             otpRepository.save(oldOTP);
         }
     }
+
+
 }
