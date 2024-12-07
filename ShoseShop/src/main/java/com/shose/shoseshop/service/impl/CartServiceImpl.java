@@ -4,10 +4,7 @@ import com.shose.shoseshop.configuration.CustomUserDetails;
 import com.shose.shoseshop.controller.request.ProductDetailRequest;
 import com.shose.shoseshop.controller.response.CartResponse;
 import com.shose.shoseshop.entity.*;
-import com.shose.shoseshop.repository.CartDetailRepository;
-import com.shose.shoseshop.repository.CartRepository;
-import com.shose.shoseshop.repository.ProductDetailRepository;
-import com.shose.shoseshop.repository.UserRepository;
+import com.shose.shoseshop.repository.*;
 import com.shose.shoseshop.service.CartService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +24,7 @@ public class CartServiceImpl implements CartService {
     private final ProductDetailRepository productDetailRepository;
     private final UserRepository userRepository;
     private final CartDetailRepository cartDetailRepository;
+    ProductRepository productRepository;
 
     @Override
     public void create(User user) {
@@ -43,6 +41,7 @@ public class CartServiceImpl implements CartService {
         cartDetail.setProductDetail(productDetail);
         cartDetail.setQuantity(quantity);
         cartDetail.setCartId(cart.getId());
+        cartDetail.setProductName(productDetail.getProduct().getName());
         List<CartDetail> cartDetails = cart.getCartDetails();
         cartDetails.add(cartDetail);
         cartDetailRepository.save(cartDetail);
