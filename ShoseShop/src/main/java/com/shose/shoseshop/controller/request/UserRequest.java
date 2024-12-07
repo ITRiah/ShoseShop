@@ -29,4 +29,5 @@ public class UserRequest {
     private MultipartFile file;
     private Date birthday;
     private String address;
+    private Role role;
 }

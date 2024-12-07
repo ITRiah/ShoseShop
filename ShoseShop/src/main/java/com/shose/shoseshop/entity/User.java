@@ -35,8 +35,8 @@ public class User extends BaseEntity {
     @Column(length = 254, unique = true, nullable = false)
     private String email;
 
-    @Size(max = 50)
-    @Column(name = "avatar", length = 50)
+    @Size(max = 255)
+    @Column(name = "avatar", length = 255)
     private String avatar;
 
     @Temporal(TemporalType.DATE)
