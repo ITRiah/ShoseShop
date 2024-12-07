@@ -7,6 +7,7 @@ import com.shose.shoseshop.controller.response.UserResponse;
 import com.shose.shoseshop.entity.OTP;
 import com.shose.shoseshop.entity.Product;
 import com.shose.shoseshop.entity.User;
+import com.shose.shoseshop.repository.OTPRepository;
 import com.shose.shoseshop.repository.UserRepository;
 import com.shose.shoseshop.service.CartService;
 import com.shose.shoseshop.service.EmailService;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
     EmailService emailService;
     OTPService otpService;
     ModelMapper modelMapper;
+    OTPRepository otpRepository;
 
     @Override
     public void create(UserRequest userRequest) {
@@ -60,12 +62,12 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(String email, String newPassword, String otpStr) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
-        OTP otp = otpService.getLastestOTPByEmail(email);
+        OTP otp = otpRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("OTP is expired!"));;
         if (otpStr.equals(otp.getOtp())) {
             user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
             userRepository.save(user);
         } else {
-            throw new IllegalArgumentException("Password is invalid, please check your email!");
+            throw new IllegalArgumentException("OTP is invalid, please check your email!");
         }
     }
 
@@ -92,7 +94,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void forgotPassword(String email) {
-        OTP otp = otpService.create(email);
-        emailService.sendMail("Request to retrieve password!", "Your OTP: " + otp.getOtp(), email);
+        userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+        OTP oldOTP = otpRepository.findByEmail(email).orElse(null);
+        if (oldOTP == null) {
+            OTP otp = otpService.create(email);
+            emailService.sendMail("Request to retrieve password!", "Your OTP: " + otp.getOtp(), email);
+        } else {
+            oldOTP.markAsDelete();
+            otpRepository.save(oldOTP);
+        }
     }
 }

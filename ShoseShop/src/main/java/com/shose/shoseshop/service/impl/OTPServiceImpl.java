@@ -9,9 +9,12 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +36,5 @@ public class OTPServiceImpl implements OTPService {
             code.append(CHARACTERS.charAt(index));
         }
         return otpRepository.save(new OTP(code.toString(), email));
-    }
-
-    @Override
-    public OTP getLastestOTPByEmail(String email) {
-        return otpRepository.findTopByEmailOrderByCreateAtDesc(email).orElseThrow(EntityNotFoundException::new);
     }
 }
