@@ -1,5 +1,6 @@
 package com.shose.shoseshop.service.impl;
 
+import com.shose.shoseshop.constant.Role;
 import com.shose.shoseshop.controller.request.ProductFilterRequest;
 import com.shose.shoseshop.controller.request.ProductRequest;
 import com.shose.shoseshop.controller.response.ProductResponse;
@@ -60,8 +61,20 @@ public class ProductServiceImpl implements ProductService {
     public Page<ProductResponse> listProduct(Pageable pageable, ProductFilterRequest request) {
         Specification<Product> specUser = ProductSpecification.generateFilterProducts(request);
         Page<Product> productPage = productRepository.findAll(specUser, pageable);
+        if (request.getRole() != null && request.getRole() == Role.USER) {
+            productPage = productPage.map(product -> {
+                product.setProductDetailResponseList(
+                        product.getProductDetailResponseList()
+                                .stream()
+                                .filter(productDetail -> !productDetail.getIsDeleted())
+                                .toList()
+                );
+                return product;
+            });
+        }
         return productPage.map(product -> modelMapper.map(product, ProductResponse.class));
     }
+
 
     @Override
     @Transactional
