@@ -76,6 +76,6 @@ public class UserController {
 
     @GetMapping
     public ResponseData<UserResponse> getLoginUser() {
-        return new ResponseData<>(HttpStatus.OK, "Success", userService.getLoginUser());
+        return new ResponseData<>(userService.getLoginUser());
     }
 }
