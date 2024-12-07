@@ -45,13 +45,13 @@ public class CartServiceImpl implements CartService {
 
         if (existingCartDetail.isPresent()) {
             CartDetail cartDetail = existingCartDetail.get();
-            cartDetail.setQuantity(cartDetail.getQuantity() + quantity);
+            cartDetail.setQuantity(quantity);
             cartDetailRepository.save(cartDetail);
         } else {
             CartDetail newCartDetail = new CartDetail();
             newCartDetail.setProductDetail(productDetail);
             newCartDetail.setQuantity(quantity);
-            newCartDetail.setCartId(cart.getId());
+            newCartDetail.setCart(cart);
             newCartDetail.setProductName(productDetail.getProduct().getName());
             cartDetailRepository.save(newCartDetail);
         }

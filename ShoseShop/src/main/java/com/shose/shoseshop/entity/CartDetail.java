@@ -18,9 +18,11 @@ public class CartDetail extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String productName;
-    @ManyToOne
-    @JoinColumn(name = "product_detail_id")
+    @OneToOne
+    @JoinColumn(name = "product_detail_id", nullable = false, unique = true)
     private ProductDetail productDetail;
     private Long quantity;
-    private Long cartId;
+    @ManyToOne
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
 }
