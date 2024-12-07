@@ -44,9 +44,10 @@ public class UserController {
     @PutMapping("/password")
     public ResponseData<Void> updatePassword(@RequestParam("email") String email,
                                              @RequestParam("password") String password,
+                                             @RequestParam("oldPassword") String oldPassword,
                                              @RequestParam("otp") String otp) {
-        userService.updatePassword(email, password, otp);
-        return new ResponseData<>(HttpStatus.CREATED, "Your password has been updated!");
+        userService.updatePassword(email, oldPassword, password, otp);
+        return new ResponseData<>(HttpStatus.OK, "Your password has been updated!");
     }
 
     @PutMapping("/block")

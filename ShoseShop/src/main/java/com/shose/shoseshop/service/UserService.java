@@ -20,7 +20,7 @@ public interface UserService {
 
     void forgotPassword(String email);
 
-    void updatePassword(String email, String newPassword, String otp);
+    void updatePassword(String email, String oldPassword, String newPassword, String otp);
 
     Page<UserResponse> getAll(Pageable pageable, UserFilterRequest request);
 

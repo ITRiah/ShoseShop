@@ -59,9 +59,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(String email, String newPassword, String otpStr) {
+    public void updatePassword(String email, String oldPasswod, String newPassword, String otpStr) {
+        String encodeOldPassword = new BCryptPasswordEncoder().encode(oldPasswod);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+        if (!encodeOldPassword.equals(user.getPassword())) {
+            throw new IllegalArgumentException("Password is not correct!");
+        }
         OTP otp = otpRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("OTP is expired!"));;
         if (otpStr.equals(otp.getOtp())) {
             user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
