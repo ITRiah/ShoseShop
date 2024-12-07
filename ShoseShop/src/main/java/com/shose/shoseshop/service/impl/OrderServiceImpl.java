@@ -67,6 +67,7 @@ public class OrderServiceImpl implements OrderService {
     private Order createOrderFromRequest(OrderRequest orderRequest, User user) {
         Order order = new ModelMapper().map(orderRequest, Order.class);
         order.setUser(user);
+        order.setId(null);
         return orderRepository.save(order);
     }
 
@@ -96,10 +97,10 @@ public class OrderServiceImpl implements OrderService {
             }
             int value = voucher.getValue();
             BigDecimal maxMoney = voucher.getMaxMoney();
-            if (total.multiply(BigDecimal.valueOf(value / 100)).compareTo(maxMoney) > 0) {
+            if (total.multiply(BigDecimal.valueOf(value).divide(BigDecimal.valueOf(100))).compareTo(maxMoney) > 0) {
                 total = total.subtract(maxMoney);
             } else {
-                total = total.subtract(total.multiply(BigDecimal.valueOf(value / 100)));
+                total = total.subtract(total.multiply(BigDecimal.valueOf(value).divide(BigDecimal.valueOf(100))));
             }
             voucher.setQuantity(voucher.getQuantity() - 1);
             voucherRepository.save(voucher);
