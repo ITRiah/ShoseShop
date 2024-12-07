@@ -55,7 +55,8 @@ public class OrderServiceImpl implements OrderService {
             emailService.sendInvoiceWithAttachment(user.getEmail(), order.getFullName(), totalAmount, orderDetails);
         } catch (MessagingException e) {
             e.printStackTrace();
-        }    }
+        }
+    }
 
     private User getUserFromContext() {
         UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -90,6 +91,9 @@ public class OrderServiceImpl implements OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (orderRequest.getVoucherId() != null) {
             Voucher voucher = voucherRepository.findById(orderRequest.getVoucherId()).orElseThrow(EntityNotFoundException::new);
+            if (voucher.getQuantity() <= 0) {
+                throw new IllegalArgumentException("This voucher is out of stock!");
+            }
             int value = voucher.getValue();
             BigDecimal maxMoney = voucher.getMaxMoney();
             if (total.multiply(BigDecimal.valueOf(value / 100)).compareTo(maxMoney) > 0) {
@@ -97,6 +101,8 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 total = total.subtract(total.multiply(BigDecimal.valueOf(value / 100)));
             }
+            voucher.setQuantity(voucher.getQuantity() - 1);
+            voucherRepository.save(voucher);
         }
         return total;
     }
