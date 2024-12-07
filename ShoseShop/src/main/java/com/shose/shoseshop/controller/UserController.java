@@ -1,5 +1,6 @@
 package com.shose.shoseshop.controller;
 
+import com.shose.shoseshop.controller.request.ChangePasswordRequest;
 import com.shose.shoseshop.controller.request.ProductFilterRequest;
 import com.shose.shoseshop.controller.request.UserFilterRequest;
 import com.shose.shoseshop.controller.request.UserRequest;
@@ -42,11 +43,8 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public ResponseData<Void> updatePassword(@RequestParam("email") String email,
-                                             @RequestParam("password") String password,
-                                             @RequestParam("oldPassword") String oldPassword,
-                                             @RequestParam("otp") String otp) {
-        userService.updatePassword(email, oldPassword, password, otp);
+    public ResponseData<Void> updatePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        userService.updatePassword(changePasswordRequest);
         return new ResponseData<>(HttpStatus.OK, "Your password has been updated!");
     }
 

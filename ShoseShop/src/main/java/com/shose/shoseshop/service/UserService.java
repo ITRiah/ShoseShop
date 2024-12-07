@@ -1,5 +1,6 @@
 package com.shose.shoseshop.service;
 
+import com.shose.shoseshop.controller.request.ChangePasswordRequest;
 import com.shose.shoseshop.controller.request.UserFilterRequest;
 import com.shose.shoseshop.controller.request.UserRequest;
 import com.shose.shoseshop.controller.response.UserResponse;
@@ -20,7 +21,7 @@ public interface UserService {
 
     void forgotPassword(String email);
 
-    void updatePassword(String email, String oldPassword, String newPassword, String otp);
+    void updatePassword(ChangePasswordRequest request);
 
     Page<UserResponse> getAll(Pageable pageable, UserFilterRequest request);
 
