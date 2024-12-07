@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class ProductFilterRequest {
     private Set<Long> procedureIds;
+    private Set<Long> categoryIds;
     private String name;
     private BigDecimal priceBigger;
     private BigDecimal priceLower;

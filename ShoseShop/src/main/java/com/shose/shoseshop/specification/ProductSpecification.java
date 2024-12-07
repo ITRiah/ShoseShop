@@ -20,6 +20,14 @@ public class ProductSpecification {
                                 subRoot.get(Procedure_.ID).in(procedureIds))));
     }
 
+    private static Specification<Product> hasCategoryIdIn(Set<Long> categoryIds) {
+        return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> cb.exists(
+                QueryUtils.buildSubQuery(
+                        Procedure.class, root, query, (Root<Product> rootParent, Subquery<Procedure> subQuery, Root<Procedure> subRoot)
+                                -> QueryUtils.and(cb, cb.equal(subRoot.get(Procedure_.ID), root.get(Product_.CATEGORY)),
+                                subRoot.get(Procedure_.ID).in(categoryIds))));
+    }
+
     private static Specification<Product> isDeleted() {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb)
                 -> cb.isFalse(root.get(Product_.IS_DELETED));
@@ -47,6 +55,9 @@ public class ProductSpecification {
         if (request == null) return specification;
         if (request.getProcedureIds() != null && !request.getProcedureIds().isEmpty()) {
             specification = specification.and(hasProcedureIdIn(request.getProcedureIds()));
+        }
+        if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
+            specification = specification.and(hasCategoryIdIn(request.getCategoryIds()));
         }
         if (request.getRole() != null && request.getRole().equals(Role.USER)) {
             specification = specification.and(isDeleted());
