@@ -72,7 +72,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
     @Override
     public Page<UserResponse> getAll(Pageable pageable, UserFilterRequest request) {
         Specification<User> specUser = UserSpecification.generateFilter(request);
