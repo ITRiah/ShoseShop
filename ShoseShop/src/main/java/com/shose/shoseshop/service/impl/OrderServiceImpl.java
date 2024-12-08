@@ -40,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     VoucherRepository voucherRepository;
     ModelMapper modelMapper;
     EmailService emailService;
+    ProductDetailRepository productDetailRepository;
 
     @Override
     @Transactional
@@ -109,12 +110,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void saveOrderAndDetailsAndCartDetails(Order order, List<OrderDetail> orderDetails, List<CartDetail> cartDetails, Set<Long> cartDetailIds) {
+        List<ProductDetail> productDetails = new ArrayList<>();
+        for (CartDetail cartDetail : cartDetails) {
+            ProductDetail productDetail = cartDetail.getProductDetail();
+            int remainingQuantity = productDetail.getQuantity() - cartDetail.getQuantity().intValue();
+            if (remainingQuantity < 0) {
+                throw new IllegalArgumentException("Insufficient stock for product: " + productDetail.getId());
+            }
+            productDetail.setQuantity(remainingQuantity);
+            productDetails.add(productDetail);
+        }
         cartDetails.forEach(BaseEntity::markAsDelete);
+        productDetailRepository.saveAll(productDetails);
         cartDetailRepository.saveAll(cartDetails);
         orderDetailRepository.saveAll(orderDetails);
         orderRepository.save(order);
         cartService.deleteCartDetails(cartDetailIds);
     }
+
+
 
 
     @Override
