@@ -3,6 +3,7 @@ package com.shose.shoseshop.controller.response;
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.constant.PaymentMethod;
 import com.shose.shoseshop.constant.ShippingMethod;
+import com.shose.shoseshop.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +17,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderResponse {
+public class OrderResponse extends BaseEntity {
     private Long id;
     private String fullName;
     private String phone;
     private OrderStatus status;
     private String reason;
-    private Date orderDate;
     private String shippingAddress;
     private ShippingMethod shippingMethod;
     private PaymentMethod paymentMethod;
