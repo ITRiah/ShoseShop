@@ -16,6 +16,7 @@ import com.shose.shoseshop.service.OTPService;
 import com.shose.shoseshop.service.UserService;
 import com.shose.shoseshop.specification.ProductSpecification;
 import com.shose.shoseshop.specification.UserSpecification;
+import com.shose.shoseshop.util.ObjectUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -63,12 +66,20 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(ChangePasswordRequest request) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(EntityNotFoundException::new);
-        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Password is not correct!");
+        User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
+        if (Objects.nonNull(request.getEmail())) {
+            userRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new EntityNotFoundException("User has email " + request.getEmail() + " does not exists!"));
+            OTP otp = otpRepository.findByEmail(request.getEmail()).orElseThrow(EntityNotFoundException::new);
+            if (otp.getOtp().equals(request.getOtp())) {
+                user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            }
+        } else {
+            if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+                throw new IllegalArgumentException("Password is not correct!");
+            }
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         }
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
 
