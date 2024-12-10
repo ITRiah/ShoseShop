@@ -68,4 +68,10 @@ public class OrderController {
     public ResponseData<List<OrderResponse>> getByUser() {
         return new ResponseData<>(orderService.getByUser());
     }
+
+    @DeleteMapping("/orders/{id}/cancel")
+    public ResponseData<Void> cancelOrder(@PathVariable Long id) {
+        orderService.cancelOrder(id);
+        return new ResponseData<>(HttpStatus.NO_CONTENT,"Delete order success!");
+    }
 }

@@ -128,9 +128,6 @@ public class OrderServiceImpl implements OrderService {
         cartService.deleteCartDetails(cartDetailIds);
     }
 
-
-
-
     @Override
     @Transactional
     public void update(Long id, OrderStatus status) {
@@ -188,5 +185,29 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findByUser_Id(user.getId());
         return orders.stream()
                 .map(order -> modelMapper.map(order, OrderResponse.class))
-                .collect(Collectors.toList());    }
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + orderId));
+        if (!order.getStatus().equals(OrderStatus.PENDING)) {
+            throw new IllegalArgumentException("Order status must be PENDING!");
+        }
+//        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_Id(orderId);
+//        List<ProductDetail> updatedProductDetails = new ArrayList<>();
+//        for (OrderDetail orderDetail : orderDetails) {
+//            ProductDetail productDetail = orderDetail.getProductDetail();
+//            productDetail.setQuantity((int) (productDetail.getQuantity() + orderDetail.getQuantity()));
+//            updatedProductDetails.add(productDetail);
+//        }
+//        productDetailRepository.saveAll(updatedProductDetails);
+//        orderDetailRepository.deleteAll(orderDetails);
+//        List<CartDetail> cartDetails = cartDetailRepository.findByOrderId(orderId);
+//        if (!cartDetails.isEmpty()) {
+//            cartDetailRepository.deleteAll(cartDetails);
+//        }
+//        orderRepository.delete(order);
+    }
 }
