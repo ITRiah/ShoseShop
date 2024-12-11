@@ -59,7 +59,7 @@ public class VoucherController {
         Pageable customPageable = (page == pageable.getPageNumber() && size == pageable.getPageSize())
                 ? pageable
                 : PageRequest.of(page, size, pageable.getSort());
-        return new ResponseData<>(voucherService.getAllForAdmin(pageable, customPageable));
+        return new ResponseData<>(voucherService.getAllForAdmin(customPageable, request));
     }
 
     @GetMapping("/{id}")

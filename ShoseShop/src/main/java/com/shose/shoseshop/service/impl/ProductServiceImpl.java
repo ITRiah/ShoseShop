@@ -61,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
     public Page<ProductResponse> listProduct(Pageable pageable, ProductFilterRequest request) {
         Specification<Product> specUser = ProductSpecification.generateFilterProducts(request);
         Page<Product> productPage = productRepository.findAll(specUser, pageable);
-        if (request.getRole() != null && request.getRole() == Role.USER) {
+        if (request != null && request.getRole() != null && request.getRole() == Role.USER) {
             productPage = productPage.map(product -> {
                 product.setProductDetailResponseList(
                         product.getProductDetailResponseList()
