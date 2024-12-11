@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -59,7 +60,12 @@ public class UserController {
                                                 @SortDefault.SortDefaults({@SortDefault(sort = User_.CREATED_AT, direction = Sort.Direction.DESC)})
                                                 Pageable pageable,
                                                 @RequestBody(required = false) UserFilterRequest request) {
-        return new ResponseData<>(userService.getAll(pageable, request));
+        int page = (request != null && request.getPage() != null) ? request.getPage() : pageable.getPageNumber();
+        int size = (request != null && request.getSize() != null) ? request.getSize() : pageable.getPageSize();
+        Pageable customPageable = (page == pageable.getPageNumber() && size == pageable.getPageSize())
+                ? pageable
+                : PageRequest.of(page, size, pageable.getSort());
+        return new ResponseData<>(userService.getAll(customPageable, request));
     }
 
     @GetMapping("/{id}")

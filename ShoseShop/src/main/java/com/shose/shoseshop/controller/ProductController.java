@@ -8,6 +8,7 @@ import com.shose.shoseshop.entity.Product_;
 import com.shose.shoseshop.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -36,7 +37,12 @@ public class ProductController {
                                        @SortDefault.SortDefaults({@SortDefault(sort = Product_.NAME, direction = Sort.Direction.ASC)})
                                        Pageable pageable,
                                        @RequestBody(required = false) ProductFilterRequest request) {
-        return new ResponseData<>(productService.listProduct(pageable, request));
+        int page = (request != null && request.getPage() != null) ? request.getPage() : pageable.getPageNumber();
+        int size = (request != null && request.getSize() != null) ? request.getSize() : pageable.getPageSize();
+        Pageable customPageable = (page == pageable.getPageNumber() && size == pageable.getPageSize())
+                ? pageable
+                : PageRequest.of(page, size, pageable.getSort());
+        return new ResponseData<>(productService.listProduct(customPageable, request));
     }
 
     @DeleteMapping

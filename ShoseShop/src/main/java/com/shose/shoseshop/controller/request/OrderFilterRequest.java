@@ -12,7 +12,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderFilterRequest {
+public class OrderFilterRequest extends PageRequest {
     private Long id;
     private Date dateFrom;
     private Date dateTo;

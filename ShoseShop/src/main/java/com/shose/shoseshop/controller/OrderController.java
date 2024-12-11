@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -44,7 +45,12 @@ public class OrderController {
                                              @SortDefault.SortDefaults({@SortDefault(sort = Order_.CREATED_AT, direction = Sort.Direction.DESC)})
                                              Pageable pageable,
                                              @RequestBody(required = false) OrderFilterRequest request) {
-        return new ResponseData<>(orderService.getAll(pageable, request));
+        int page = (request != null && request.getPage() != null) ? request.getPage() : pageable.getPageNumber();
+        int size = (request != null && request.getSize() != null) ? request.getSize() : pageable.getPageSize();
+        Pageable customPageable = (page == pageable.getPageNumber() && size == pageable.getPageSize())
+                ? pageable
+                : PageRequest.of(page, size, pageable.getSort());
+        return new ResponseData<>(orderService.getAll(customPageable, request));
     }
 
     @GetMapping("/statistic")

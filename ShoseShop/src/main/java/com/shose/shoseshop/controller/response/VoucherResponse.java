@@ -17,6 +17,7 @@ public class VoucherResponse {
     private String code;
     private Integer value;
     private Integer quantity;
+    private String img;
     private BigDecimal maxMoney;
     private Date expiredTime;
     private String description;

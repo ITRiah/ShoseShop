@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductFilterRequest {
+public class ProductFilterRequest extends PageRequest{
     private Set<Long> procedureIds;
     private Set<Long> categoryIds;
     private String name;

@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -53,7 +54,12 @@ public class VoucherController {
                                                         @SortDefault.SortDefaults({@SortDefault(sort = Voucher_.CREATED_AT, direction = Sort.Direction.DESC)})
                                                         Pageable pageable,
                                                         @RequestBody(required = false) OrderFilterRequest request) {
-        return new ResponseData<>(voucherService.getAllForAdmin(pageable, request));
+        int page = (request != null && request.getPage() != null) ? request.getPage() : pageable.getPageNumber();
+        int size = (request != null && request.getSize() != null) ? request.getSize() : pageable.getPageSize();
+        Pageable customPageable = (page == pageable.getPageNumber() && size == pageable.getPageSize())
+                ? pageable
+                : PageRequest.of(page, size, pageable.getSort());
+        return new ResponseData<>(voucherService.getAllForAdmin(pageable, customPageable));
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,5 @@
 package com.shose.shoseshop.controller.request;
 
-import com.shose.shoseshop.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserFilterRequest extends PageRequest {
-    private String email;
-    private Role role;
+public class PageRequest {
+    private Integer page;
+    private Integer size;
 }
