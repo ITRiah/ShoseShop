@@ -130,11 +130,35 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void update(Long id, OrderStatus status) {
-        Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        order.setStatus(status);
+    public void update(Long id, OrderStatus newStatus) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
+        OrderStatus currentStatus = order.getStatus();
+        if (!isValidStatusTransition(currentStatus, newStatus)) {
+            throw new IllegalArgumentException("Invalid status transition: " + currentStatus + " -> " + newStatus);
+        }
+        order.setStatus(newStatus);
         orderRepository.save(order);
     }
+
+    private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
+        switch (currentStatus) {
+            case PENDING:
+                return newStatus == OrderStatus.CONFIRMED || newStatus == OrderStatus.CANCELED;
+            case CONFIRMED:
+                return newStatus == OrderStatus.PROCESSING || newStatus == OrderStatus.CANCELED;
+            case PROCESSING:
+                return newStatus == OrderStatus.SHIPPED;
+            case SHIPPED:
+                return newStatus == OrderStatus.DELIVERED;
+            case DELIVERED:
+            case CANCELED:
+                return false;
+            default:
+                return false;
+        }
+    }
+
 
     @Override
     public Page<OrderResponse> getAll(Pageable pageable, OrderFilterRequest request) {
@@ -145,21 +169,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<StatisticResponse> statistic(Long year) {
-        // Lấy danh sách doanh thu từ cơ sở dữ liệu
         List<StatisticResponse> rawData = orderRepository.findMonthlyRevenue(year, OrderStatus.DELIVERED);
-
-        // Tạo danh sách kết quả với giá trị mặc định cho tất cả 12 tháng
         Map<Integer, StatisticResponse> resultMap = new HashMap<>();
         for (int month = 1; month <= 12; month++) {
             resultMap.put(month, new StatisticResponse(year.intValue(), month, BigDecimal.ZERO));
         }
-
-        // Gộp dữ liệu từ cơ sở dữ liệu vào danh sách
         for (StatisticResponse data : rawData) {
             resultMap.put(data.getMonth(), data);
         }
-
-        // Trả về danh sách kết quả, sắp xếp theo tháng
         return resultMap.values().stream()
                 .sorted(Comparator.comparing(StatisticResponse::getMonth))
                 .toList();
@@ -189,25 +206,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + orderId));
-        if (!order.getStatus().equals(OrderStatus.PENDING)) {
+        if (!order.getStatus().equals(OrderStatus.PENDING) && !order.getStatus().equals(OrderStatus.CONFIRMED)) {
             throw new IllegalArgumentException("Order status must be PENDING!");
         }
-//        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_Id(orderId);
-//        List<ProductDetail> updatedProductDetails = new ArrayList<>();
-//        for (OrderDetail orderDetail : orderDetails) {
-//            ProductDetail productDetail = orderDetail.getProductDetail();
-//            productDetail.setQuantity((int) (productDetail.getQuantity() + orderDetail.getQuantity()));
-//            updatedProductDetails.add(productDetail);
-//        }
-//        productDetailRepository.saveAll(updatedProductDetails);
-//        orderDetailRepository.deleteAll(orderDetails);
-//        List<CartDetail> cartDetails = cartDetailRepository.findByOrderId(orderId);
-//        if (!cartDetails.isEmpty()) {
-//            cartDetailRepository.deleteAll(cartDetails);
-//        }
-//        orderRepository.delete(order);
+        if (order.getVoucherId() != null) {
+            Voucher voucher = voucherRepository.findById(order.getVoucherId()).orElseThrow(EntityNotFoundException::new);
+            voucher.setQuantity(voucher.getQuantity() + 1);
+            voucherRepository.save(voucher);
+        }
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_Id(orderId);
+        List<ProductDetail> updatedProductDetails = new ArrayList<>();
+        for (OrderDetail orderDetail : orderDetails) {
+            ProductDetail productDetail = orderDetail.getProductDetail();
+            productDetail.setQuantity(productDetail.getQuantity() + orderDetail.getQuantity().intValue());
+            updatedProductDetails.add(productDetail);
+        }
+        productDetailRepository.saveAll(updatedProductDetails);
+        order.setStatus(OrderStatus.CANCELED);
+        orderRepository.save(order);
     }
 }

@@ -2,6 +2,7 @@ package com.shose.shoseshop.controller.response;
 
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.constant.PaymentMethod;
+import com.shose.shoseshop.constant.PaymentStatus;
 import com.shose.shoseshop.constant.ShippingMethod;
 import com.shose.shoseshop.entity.BaseEntity;
 import lombok.AllArgsConstructor;
@@ -28,5 +29,7 @@ public class OrderResponse extends BaseEntity {
     private PaymentMethod paymentMethod;
     private BigDecimal totalAmount;
     private String note;
-    List<OrderDetailResponse> orderDetails;
+    private PaymentStatus paymentStatus;
+    private List<OrderDetailResponse> orderDetails;
+    private Long voucherId;
 }

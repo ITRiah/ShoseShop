@@ -11,5 +11,5 @@ public enum OrderStatus {
     PROCESSING,     // Đơn hàng đang được xử lý (đóng gói, chuẩn bị giao)
     SHIPPED,        // Đơn hàng đã được giao cho đơn vị vận chuyển
     DELIVERED,      // Đơn hàng đã được giao đến khách hàng
-    CANCELED,       // Đơn hàng đã bị hủy bởi người dùng hoặc hệ thống
+    CANCELED;       // Đơn hàng đã bị hủy bởi người dùng hoặc hệ thống
 }

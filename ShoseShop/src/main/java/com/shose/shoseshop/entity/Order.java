@@ -2,6 +2,7 @@ package com.shose.shoseshop.entity;
 
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.constant.PaymentMethod;
+import com.shose.shoseshop.constant.PaymentStatus;
 import com.shose.shoseshop.constant.ShippingMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,8 @@ public class Order extends BaseEntity {
     private PaymentMethod paymentMethod;
     private BigDecimal totalAmount;
     private String note;
+    private PaymentStatus paymentStatus = PaymentStatus.WATTING;
     @OneToMany(mappedBy = "order")
-    List<OrderDetail> orderDetails;
+    private List<OrderDetail> orderDetails;
+    private Long voucherId;
 }

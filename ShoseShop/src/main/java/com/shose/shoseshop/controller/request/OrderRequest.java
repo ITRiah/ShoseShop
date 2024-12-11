@@ -1,6 +1,7 @@
 package com.shose.shoseshop.controller.request;
 
 import com.shose.shoseshop.constant.PaymentMethod;
+import com.shose.shoseshop.constant.PaymentStatus;
 import com.shose.shoseshop.constant.ShippingMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class OrderRequest {
     private ShippingMethod shippingMethod;
     private PaymentMethod paymentMethod;
     private String note;
+    private PaymentStatus paymentStatus;
     private Set<Long> cartDetailIds;
     private Long voucherId;
 }
