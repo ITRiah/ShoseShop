@@ -91,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void update(ProductRequest productRequest) {
         Product product = productRepository.findById(productRequest.getId()).orElseThrow(EntityNotFoundException::new);
-        modelMapper.map(productRequest, Product.class);
+        modelMapper.map(productRequest, product);
         product.setImg(productRequest.getImg());
         productRepository.save(product);
     }
