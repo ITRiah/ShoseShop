@@ -14,5 +14,6 @@ import lombok.Setter;
 public class OrderDetailResponse extends BaseEntity {
     private Long id;
     private ProductDetailResponse productDetail;
+    private String productName;
     private Long quantity;
 }

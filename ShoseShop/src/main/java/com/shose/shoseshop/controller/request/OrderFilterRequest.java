@@ -1,5 +1,6 @@
 package com.shose.shoseshop.controller.request;
 
+import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,4 +20,5 @@ public class OrderFilterRequest extends PageRequest {
     private String fullName;
     private String name;
     private Role role;
+    private OrderStatus status;
 }

@@ -1,7 +1,6 @@
 package com.shose.shoseshop.controller.response;
 
-import com.shose.shoseshop.entity.Product;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

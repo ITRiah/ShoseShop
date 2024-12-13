@@ -7,6 +7,7 @@ import com.shose.shoseshop.controller.request.UserRequest;
 import com.shose.shoseshop.controller.response.OrderResponse;
 import com.shose.shoseshop.controller.response.ProductStatisticResponse;
 import com.shose.shoseshop.controller.response.StatisticResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +22,5 @@ public interface OrderService {
     OrderResponse getById(Long id);
     List<OrderResponse> getByUser();
     void cancelOrder(Long orderId);
+    byte[] exportOrder(Long orderId);
 }

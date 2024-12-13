@@ -1,5 +1,6 @@
 package com.shose.shoseshop.specification;
 
+import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.entity.Order;
 import com.shose.shoseshop.entity.Order_;
@@ -30,6 +31,13 @@ public class OrderSpecification {
                 -> cb.lessThanOrEqualTo(root.get(Order_.CREATED_AT), dateTo);
     }
 
+    private static Specification<Order> hasStatus(OrderStatus status) {
+        return (Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            Path<String> statusPath = root.get(Order_.STATUS);
+            return cb.equal(statusPath, status);
+        };
+    }
+
     public static Specification<Order> generateFilter(OrderFilterRequest request) {
         Specification<Order> specification = Specification.where(null);
         if (request == null) return specification;
@@ -41,6 +49,9 @@ public class OrderSpecification {
         }
         if (request.getDateTo() != null) {
             specification = specification.and((hasDateTo(request.getDateTo())));
+        }
+        if (request.getStatus() != null) {
+            specification = specification.and((hasStatus(request.getStatus())));
         }
         return specification;
     }

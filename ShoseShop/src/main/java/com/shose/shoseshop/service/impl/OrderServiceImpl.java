@@ -1,5 +1,9 @@
 package com.shose.shoseshop.service.impl;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
@@ -14,6 +18,7 @@ import com.shose.shoseshop.service.OrderService;
 import com.shose.shoseshop.specification.OrderSpecification;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
@@ -25,8 +30,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
@@ -51,9 +58,11 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetail> orderDetails = mapCartDetailsToOrderDetails(cartDetails, order);
         BigDecimal totalAmount = calculateTotalAmount(orderDetails, orderRequest);
         order.setTotalAmount(totalAmount);
+        order.setStatus(OrderStatus.PENDING);
+        order.setOrderDetails(orderDetails);
         saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails, orderRequest.getCartDetailIds());
         try {
-            emailService.sendInvoiceWithAttachment(user.getEmail(), order.getFullName(), totalAmount, orderDetails);
+            emailService.sendInvoiceWithAttachment(user.getEmail(), order);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -164,8 +173,18 @@ public class OrderServiceImpl implements OrderService {
     public Page<OrderResponse> getAll(Pageable pageable, OrderFilterRequest request) {
         Specification<Order> spec = OrderSpecification.generateFilter(request);
         Page<Order> orderPage = orderRepository.findAll(spec, pageable);
-        return orderPage.map(order -> modelMapper.map(order, OrderResponse.class));
+        Map<Long, String> productNameByProductDetailId = productDetailRepository.findAll()
+                .stream().collect(Collectors.toMap(ProductDetail::getId, productDetail -> productDetail.getProduct().getName()));
+
+        return orderPage.map(order -> {
+            OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
+            orderResponse.getOrderDetails().forEach(orderDetail -> {
+              orderDetail.setProductName(productNameByProductDetailId.get(orderDetail.getProductDetail().getId()));
+            });
+            return orderResponse;
+        });
     }
+
 
     @Override
     public List<StatisticResponse> statistic(Long year) {
@@ -228,5 +247,11 @@ public class OrderServiceImpl implements OrderService {
         productDetailRepository.saveAll(updatedProductDetails);
         order.setStatus(OrderStatus.CANCELED);
         orderRepository.save(order);
+    }
+
+    @Override
+    public byte[] exportOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        return emailService.generateInvoicePdf(order);
     }
 }

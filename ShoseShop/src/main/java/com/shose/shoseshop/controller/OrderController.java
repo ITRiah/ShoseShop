@@ -3,7 +3,10 @@ package com.shose.shoseshop.controller;
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
-import com.shose.shoseshop.controller.response.*;
+import com.shose.shoseshop.controller.response.OrderResponse;
+import com.shose.shoseshop.controller.response.ProductStatisticResponse;
+import com.shose.shoseshop.controller.response.ResponseData;
+import com.shose.shoseshop.controller.response.StatisticResponse;
 import com.shose.shoseshop.entity.Order_;
 import com.shose.shoseshop.service.OrderService;
 import jakarta.validation.Valid;
@@ -79,5 +82,10 @@ public class OrderController {
     public ResponseData<Void> cancelOrder(@PathVariable Long id) {
         orderService.cancelOrder(id);
         return new ResponseData<>(HttpStatus.NO_CONTENT,"Delete order success!");
+    }
+
+    @GetMapping("/{orderId}/download")
+    public byte[] downloadInvoice(@PathVariable Long orderId) {
+        return orderService.exportOrder(orderId);
     }
 }
