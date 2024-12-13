@@ -1,5 +1,6 @@
 package com.shose.shoseshop.controller.request;
 
+import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.constant.PaymentMethod;
 import com.shose.shoseshop.constant.PaymentStatus;
 import com.shose.shoseshop.constant.ShippingMethod;

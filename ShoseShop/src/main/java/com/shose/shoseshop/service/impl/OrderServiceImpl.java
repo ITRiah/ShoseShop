@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.shose.shoseshop.constant.OrderStatus;
+import com.shose.shoseshop.constant.PaymentStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
 import com.shose.shoseshop.controller.response.OrderResponse;
@@ -59,6 +60,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalAmount = calculateTotalAmount(orderDetails, orderRequest);
         order.setTotalAmount(totalAmount);
         order.setStatus(OrderStatus.PENDING);
+        order.setPaymentStatus(PaymentStatus.WATTING);
         order.setOrderDetails(orderDetails);
         saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails, orderRequest.getCartDetailIds());
         try {

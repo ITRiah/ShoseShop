@@ -65,22 +65,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePassword(ChangePasswordRequest request) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
         if (Objects.nonNull(request.getEmail())) {
+            User user = userRepository.findByEmail(request.getEmail()).orElseThrow(EntityNotFoundException::new);
             userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new EntityNotFoundException("User has email " + request.getEmail() + " does not exists!"));
             OTP otp = otpRepository.findByEmail(request.getEmail()).orElseThrow(EntityNotFoundException::new);
             if (otp.getOtp().equals(request.getOtp())) {
                 user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+                userRepository.save(user);
+            } else {
+                throw new IllegalArgumentException("OTP is not correct, please check your email!");
             }
         } else {
+            UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
             if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
                 throw new IllegalArgumentException("Password is not correct!");
             }
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
         }
-        userRepository.save(user);
     }
 
     @Override
