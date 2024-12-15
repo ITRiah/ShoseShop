@@ -69,12 +69,12 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByEmail(request.getEmail()).orElseThrow(EntityNotFoundException::new);
             userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new EntityNotFoundException("User has email " + request.getEmail() + " does not exists!"));
-            OTP otp = otpRepository.findByEmail(request.getEmail()).orElseThrow(EntityNotFoundException::new);
-            if (otp.getOtp().equals(request.getOtp())) {
+            OTP otp = otpRepository.findByEmail(request.getEmail()).orElse(null);
+            if (otp != null && otp.getOtp().equals(request.getOtp())) {
                 user.setPassword(passwordEncoder.encode(request.getNewPassword()));
                 userRepository.save(user);
             } else {
-                throw new IllegalArgumentException("OTP is not correct, please check your email!");
+                throw new IllegalArgumentException("OTP đã hết hạn, please check your email!");
             }
         } else {
             UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

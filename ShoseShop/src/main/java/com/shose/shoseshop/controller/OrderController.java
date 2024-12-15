@@ -33,7 +33,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseData<Long> create(@Valid @RequestBody OrderRequest orderRequest) {
-        return new ResponseData<>(orderService.create(orderRequest));
+        return new ResponseData<>(HttpStatus.CREATED, "Create order success!", orderService.create(orderRequest));
     }
 
     @PutMapping
