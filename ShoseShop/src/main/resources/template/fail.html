@@ -1,9 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Success</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Failed</title>
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff5f5;
+        color: #333;
+    }
+
+    .container {
+        text-align: center;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .crossmark {
+        font-size: 100px;
+        color: #f44336;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        color: #f44336;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 18px;
+        color: #333;
+    }
+
+  </style>
 </head>
 <body>
-<h1>Giao dịch thất bại</h1>
+
+<div class="container">
+  <div class="crossmark">✖</div>
+  <h1>Thanh toán thất bại!</h1>
+</div>
+
 </body>
 </html>

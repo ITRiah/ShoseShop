@@ -141,7 +141,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(EntityNotFoundException::new);
         OrderStatus currentStatus = order.getStatus();
         if (!isValidStatusTransition(currentStatus, newStatus)) {
-            throw new IllegalArgumentException("Không thể ập nhật trạng thái đơn hàng từ : " + currentStatus + " -> " + newStatus);
+            throw new IllegalArgumentException("Không thể cập nhật trạng thái đơn hàng từ : " + currentStatus.getValue() + " -> " + newStatus.getValue());
         }
         order.setStatus(newStatus);
         orderRepository.save(order);
@@ -152,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
             case PENDING:
                 return newStatus == OrderStatus.CONFIRMED || newStatus == OrderStatus.CANCELED;
             case CONFIRMED:
-                return newStatus == OrderStatus.PROCESSING || newStatus == OrderStatus.CANCELED;
+                return newStatus == OrderStatus.PROCESSING;
             case PROCESSING:
                 return newStatus == OrderStatus.SHIPPED;
             case SHIPPED:
@@ -226,8 +226,8 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrder(Long orderId, String reason) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(EntityNotFoundException::new);
-        if (!order.getStatus().equals(OrderStatus.PENDING) && !order.getStatus().equals(OrderStatus.CONFIRMED)) {
-            throw new IllegalArgumentException("Trạng thái đơn hàng phải là PENDING!");
+        if (!order.getStatus().equals(OrderStatus.PENDING)) {
+            throw new IllegalArgumentException("Trạng thái đơn hàng phải không hợp lệ!");
         }
         if (order.getVoucherId() != null) {
             Voucher voucher = voucherRepository.findById(order.getVoucherId()).orElseThrow(EntityNotFoundException::new);
