@@ -26,7 +26,7 @@ public class ProductController {
     @PostMapping
     public ResponseData<Void> create(@RequestBody ProductRequest productRequest) {
         productService.create(productRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Create product success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Sản phẩm đã được thêm mới thành công!");
     }
 
     @PostMapping("/search")
@@ -45,13 +45,13 @@ public class ProductController {
     @DeleteMapping
     public ResponseData<Void> delete(@RequestParam Long id) throws IOException {
         productService.delete(id);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete product success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Sản phẩm đã bị xóa bỏ!");
     }
 
     @PutMapping
     public ResponseData<Void> update(@RequestBody ProductRequest productRequest) {
         productService.update(productRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Update product success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Cập nhật sản phẩm thành công!");
     }
 
     @GetMapping("/{id}")

@@ -26,19 +26,19 @@ public class ProductDetailController {
     @PostMapping
     public ResponseData<String> create(@RequestBody ProductDetailRequest productDetailRequest) {
         productDetailService.create(productDetailRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Create product detail success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Thêm chi tiết cho sản pẩm thành công!");
     }
 
     @PutMapping
     public ResponseData<String> update(@RequestBody ProductDetailRequest productDetailRequest) {
         productDetailService.update(productDetailRequest);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update product detail success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Cập nhật chi tiết sản phẩm thành công!");
     }
 
     @DeleteMapping
     public ResponseData<String> delete(@RequestParam Long id) {
         productDetailService.delete(id);
-        return new ResponseData<>(HttpStatus.CREATED, "Delete product detail success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Chi tiết sản phẩm đã được xóa bỏ!");
     }
 
     @GetMapping("/{id}")

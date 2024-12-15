@@ -22,7 +22,7 @@ public class CartController {
     @PutMapping
     public ResponseData<Void> addtoCart(@RequestParam Long productDetailId, @RequestParam Long quantity) {
         cartService.addToCart(productDetailId, quantity);
-        return new ResponseData<>(HttpStatus.CREATED, "Add product to cart is success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Thêm sản phẩm vào giỏ hàng thành công!");
     }
 
     @GetMapping
@@ -33,6 +33,6 @@ public class CartController {
     @DeleteMapping("/cart-details")
     public ResponseData<Void> deleteCartDetails(@RequestParam Set<Long> ids) {
         cartService.deleteCartDetails(ids);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete cart detail is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Bạn đã xóa sản phẩm khỏi giỏ hàng thành công!");
     }
 }

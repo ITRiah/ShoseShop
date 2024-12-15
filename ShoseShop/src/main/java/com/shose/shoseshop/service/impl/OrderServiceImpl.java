@@ -99,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
         if (orderRequest.getVoucherId() != null) {
             Voucher voucher = voucherRepository.findById(orderRequest.getVoucherId()).orElseThrow(EntityNotFoundException::new);
             if (voucher.getQuantity() <= 0) {
-                throw new IllegalArgumentException("This voucher is out of stock!");
+                throw new IllegalArgumentException("Voucher đã hết lượt sử dụng!");
             }
             int value = voucher.getValue();
             BigDecimal maxMoney = voucher.getMaxMoney();
@@ -120,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
             ProductDetail productDetail = cartDetail.getProductDetail();
             int remainingQuantity = productDetail.getQuantity() - cartDetail.getQuantity().intValue();
             if (remainingQuantity < 0) {
-                throw new IllegalArgumentException("Insufficient stock for product: " + productDetail.getId());
+                throw new IllegalArgumentException("Sản phẩm này đã hết hàng!");
             }
             productDetail.setQuantity(remainingQuantity);
             productDetails.add(productDetail);
@@ -138,10 +138,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void update(Long id, OrderStatus newStatus) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
+                .orElseThrow(EntityNotFoundException::new);
         OrderStatus currentStatus = order.getStatus();
         if (!isValidStatusTransition(currentStatus, newStatus)) {
-            throw new IllegalArgumentException("Invalid status transition: " + currentStatus + " -> " + newStatus);
+            throw new IllegalArgumentException("Không thể ập nhật trạng thái đơn hàng từ : " + currentStatus + " -> " + newStatus);
         }
         order.setStatus(newStatus);
         orderRepository.save(order);
@@ -223,11 +223,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void cancelOrder(Long orderId) {
+    public void cancelOrder(Long orderId, String reason) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + orderId));
+                .orElseThrow(EntityNotFoundException::new);
         if (!order.getStatus().equals(OrderStatus.PENDING) && !order.getStatus().equals(OrderStatus.CONFIRMED)) {
-            throw new IllegalArgumentException("Order status must be PENDING!");
+            throw new IllegalArgumentException("Trạng thái đơn hàng phải là PENDING!");
         }
         if (order.getVoucherId() != null) {
             Voucher voucher = voucherRepository.findById(order.getVoucherId()).orElseThrow(EntityNotFoundException::new);
@@ -243,6 +243,7 @@ public class OrderServiceImpl implements OrderService {
         }
         productDetailRepository.saveAll(updatedProductDetails);
         order.setStatus(OrderStatus.CANCELED);
+        order.setReason(reason);
         orderRepository.save(order);
     }
 

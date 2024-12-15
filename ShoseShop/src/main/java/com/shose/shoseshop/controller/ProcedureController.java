@@ -28,13 +28,13 @@ public class ProcedureController {
     @PostMapping
     public ResponseData<Void> create(@Valid @RequestBody ProcedureRequest procedureRequest) {
         procedureService.create(procedureRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Create procedure is success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Nhà sản xuất đã được thêm mới!");
     }
 
     @PutMapping
     public ResponseData<Void> update(@Valid @RequestBody ProcedureRequest procedureRequest) {
         procedureService.update(procedureRequest);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update procedure is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Cập nhật nhà sản xuất thành công!");
     }
 
     @PostMapping("/search")
@@ -53,7 +53,7 @@ public class ProcedureController {
     @DeleteMapping
     public ResponseData<Void> delete(@RequestParam Long id) {
         procedureService.delete(id);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete procedure is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Nhà sản xuất đã bị xóa bỏ!");
     }
 
     @GetMapping("/{id}")

@@ -21,7 +21,7 @@ public interface OrderService {
     List<ProductStatisticResponse>findProductSalesStatistic(Long month, Long year);
     OrderResponse getById(Long id);
     List<OrderResponse> getByUser();
-    void cancelOrder(Long orderId);
+    void cancelOrder(Long orderId, String reason);
     byte[] exportOrder(Long orderId);
     void updatePaymentStatus(Long orderId);
 }

@@ -34,19 +34,19 @@ public class VoucherController {
     @PostMapping
     public ResponseData<Void> create(@Valid @RequestBody VoucherRequest voucherRequest) {
         voucherService.create(voucherRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Create voucher is success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Voucher đã được thêm mới!");
     }
 
     @PutMapping
     public ResponseData<Void> update(@Valid @RequestBody VoucherRequest voucherRequest) {
         voucherService.update(voucherRequest);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update voucher is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Cập nhật voucher thành công!");
     }
 
     @DeleteMapping
     public ResponseData<Void> delete(@RequestParam Long id) {
         voucherService.delete(id);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete voucher is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Voucher đã bị xóa bỏ!");
     }
 
     @PostMapping("/search")

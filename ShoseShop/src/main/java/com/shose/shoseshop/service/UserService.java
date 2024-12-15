@@ -8,15 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
-//    Page<UserDTO> listUser(Pageable pageable, UserFilterForm searchDTO);
-
     void create(UserRequest userRequest);
 
-//    UserResponse getDetailsCurrentUser(String userName);
-//
-//    UserResponse getUser(Long id);
-//
-//    UpdateUserResponse updateUserByID(Long id, UpdateUserRequest updateUserRequest);
     void deleteUser(Long id);
 
     void forgotPassword(String email);

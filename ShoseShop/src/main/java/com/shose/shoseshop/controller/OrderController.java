@@ -33,13 +33,13 @@ public class OrderController {
 
     @PostMapping
     public ResponseData<Long> create(@Valid @RequestBody OrderRequest orderRequest) {
-        return new ResponseData<>(HttpStatus.CREATED, "Create order success!", orderService.create(orderRequest));
+        return new ResponseData<>(HttpStatus.CREATED,"Bạn đã đặt hàng thành công!", orderService.create(orderRequest));
     }
 
     @PutMapping
     public ResponseData<Void> updateStatus(@RequestParam("id") Long id, @RequestParam("status") OrderStatus status) {
         orderService.update(id, status);
-        return new ResponseData<>(HttpStatus.CREATED, "Update order is success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Trạng thái đơn hàng đã được cập nhật!");
     }
 
     @PostMapping("/search")
@@ -78,9 +78,9 @@ public class OrderController {
     }
 
     @DeleteMapping("/orders/{id}/cancel")
-    public ResponseData<Void> cancelOrder(@PathVariable Long id) {
-        orderService.cancelOrder(id);
-        return new ResponseData<>(HttpStatus.NO_CONTENT,"Delete order success!");
+    public ResponseData<Void> cancelOrder(@PathVariable Long id, @RequestParam String reason) {
+        orderService.cancelOrder(id, reason);
+        return new ResponseData<>(HttpStatus.NO_CONTENT,"Đơn hàng đã được hủy!");
     }
 
     @GetMapping("/{orderId}/download")

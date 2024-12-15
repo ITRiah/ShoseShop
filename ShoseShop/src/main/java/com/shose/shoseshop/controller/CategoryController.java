@@ -29,13 +29,13 @@ public class CategoryController {
     @PostMapping
     public ResponseData<Void> create(@Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.create(categoryRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Create category is success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Tạo danh mục thành công!");
     }
 
     @PutMapping
     public ResponseData<Void> update(@Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.update(categoryRequest);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update category is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Cập nhật danh mục thành công!");
     }
 
     @PostMapping("/search")
@@ -54,7 +54,7 @@ public class CategoryController {
     @DeleteMapping
     public ResponseData<Void> delete(@RequestParam Long id) {
         categoryService.delete(id);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Delete category is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Danh mục được đã xóa!");
     }
 
     @GetMapping("/{id}")

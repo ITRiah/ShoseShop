@@ -30,25 +30,25 @@ public class UserController {
     @PostMapping
     public ResponseData<Void> create(@Valid @RequestBody UserRequest userRequest) {
         userService.create(userRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Create user is success!");
+        return new ResponseData<>(HttpStatus.CREATED, "Đăng kí tài khoản thành công!");
     }
 
     @PostMapping("forgot-password")
     public ResponseData<Void> forgotPassword(@RequestParam("email") String email) {
         userService.forgotPassword(email);
-        return new ResponseData<>(HttpStatus.CREATED, "OTP has been sent to your email!");
+        return new ResponseData<>(HttpStatus.CREATED, "OTP đã đự gửi đến email của bạn!");
     }
 
     @PutMapping("/password")
     public ResponseData<Void> updatePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         userService.updatePassword(changePasswordRequest);
-        return new ResponseData<>(HttpStatus.OK, "Your password has been updated!");
+        return new ResponseData<>(HttpStatus.OK, "Mật khẩu của bạn đã được cập nhât!");
     }
 
     @PutMapping("/block")
     public ResponseData<Void> blockUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
-        return new ResponseData<>(HttpStatus.CREATED, "OTP has been sent to your email!");
+        return new ResponseData<>(HttpStatus.CREATED, "Tài khoản được chặn thành công!");
     }
 
     @PostMapping("/search")
@@ -72,7 +72,7 @@ public class UserController {
     @PutMapping
     public ResponseData<Void> update(@RequestBody UserRequest userRequest) {
         userService.update(userRequest);
-        return new ResponseData<>(HttpStatus.NO_CONTENT, "Update user is success!");
+        return new ResponseData<>(HttpStatus.NO_CONTENT, "Cập nhật thông tin cá nhân thành công!");
     }
 
     @GetMapping

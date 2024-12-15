@@ -74,13 +74,13 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(passwordEncoder.encode(request.getNewPassword()));
                 userRepository.save(user);
             } else {
-                throw new IllegalArgumentException("OTP đã hết hạn, please check your email!");
+                throw new IllegalArgumentException("OTP đã hết hạn hoặc sai OTP, hãy check email của bạn!");
             }
         } else {
             UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
             if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-                throw new IllegalArgumentException("Password is not correct!");
+                throw new IllegalArgumentException("Mật khẩu cũ không đúng!");
             }
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
             userRepository.save(user);
@@ -120,11 +120,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void forgotPassword(String email) {
         userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+                .orElseThrow(EntityNotFoundException::new);
         OTP oldOTP = otpRepository.findByEmail(email).orElse(null);
         if (oldOTP == null) {
             OTP otp = otpService.create(email);
-            emailService.sendMail("Request to retrieve password!", "Your OTP: " + otp.getOtp(), email);
+            emailService.sendMail("Yêu cầu lấy lại mật khẩu!", "OTP: " + otp.getOtp(), email);
         } else {
             oldOTP.markAsDelete();
             otpRepository.save(oldOTP);
