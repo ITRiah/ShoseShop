@@ -1,19 +1,19 @@
 package com.shose.shoseshop.controller;
-import com.shose.shoseshop.constant.PaymentStatus;
+
 import com.shose.shoseshop.controller.request.PaymentDTO;
 import com.shose.shoseshop.controller.response.ResponseData;
-import com.shose.shoseshop.entity.Order;
-import com.shose.shoseshop.repository.OrderRepository;
 import com.shose.shoseshop.service.OrderService;
 import com.shose.shoseshop.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.persistence.EntityNotFoundException;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @RestController
 @RequestMapping("/api/v1/payments")
@@ -21,6 +21,8 @@ import javax.persistence.EntityNotFoundException;
 public class PaymentController {
     private final PaymentService paymentService;
     private final OrderService orderService;
+    private final SpringTemplateEngine templateEngine;
+
     @GetMapping("/vn-pay")
     public ResponseData<PaymentDTO.VNPayResponse> pay(HttpServletRequest request) {
         return new ResponseData<>(HttpStatus.OK, "Success", paymentService.createVnPayPayment(request));
