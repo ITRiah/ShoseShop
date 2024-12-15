@@ -31,6 +31,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -124,7 +125,7 @@ public class UserServiceImpl implements UserService {
         OTP oldOTP = otpRepository.findByEmail(email).orElse(null);
         if (oldOTP == null) {
             OTP otp = otpService.create(email);
-            emailService.sendMail("Yêu cầu lấy lại mật khẩu!", "OTP: " + otp.getOtp(), email);
+            emailService.sendMail("Yêu cầu lấy lại mật khẩu!", "OTP: " + otp.getOtp(), Set.of(email));
         } else {
             oldOTP.markAsDelete();
             otpRepository.save(oldOTP);

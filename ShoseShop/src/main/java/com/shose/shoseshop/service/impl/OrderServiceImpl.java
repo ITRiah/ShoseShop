@@ -2,6 +2,7 @@ package com.shose.shoseshop.service.impl;
 
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.constant.PaymentStatus;
+import com.shose.shoseshop.constant.ShippingMethod;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
 import com.shose.shoseshop.controller.response.OrderResponse;
@@ -96,6 +97,11 @@ public class OrderServiceImpl implements OrderService {
                 .map(orderDetail -> orderDetail.getProductDetail().getPrice()
                         .multiply(BigDecimal.valueOf(orderDetail.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (orderRequest.getShippingMethod() == ShippingMethod.FAST) {
+            total = total.add(new BigDecimal("15000"));
+        } else {
+            total = total.add(new BigDecimal("50000"));
+        }
         if (orderRequest.getVoucherId() != null) {
             Voucher voucher = voucherRepository.findById(orderRequest.getVoucherId()).orElseThrow(EntityNotFoundException::new);
             if (voucher.getQuantity() <= 0) {

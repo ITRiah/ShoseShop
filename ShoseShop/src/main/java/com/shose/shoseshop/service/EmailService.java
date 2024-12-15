@@ -27,10 +27,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -40,16 +37,16 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
 
-    public void sendMail(String subject, String body, String to) {
+    public void sendMail(String subject, String body, Set<String> recipients) {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
 
         try {
+            String[] to = recipients.toArray(new String[0]);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true);
             helper.setFrom("vhai31102002@gmail.com");
-
             javaMailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -168,7 +165,7 @@ public class EmailService {
             // Bảng chi tiết đơn hàng
             PdfPTable table = new PdfPTable(6);
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{2, 1.5f, 1.5f, 1, 1.5f, 2});
+            table.setWidths(new float[]{2, 1.5f, 1.5f, 2, 1.5f, 2});
 
             // Thêm tiêu đề bảng
             table.addCell(new Paragraph("Sản phẩm", boldFont));

@@ -3,7 +3,9 @@ package com.shose.shoseshop.service;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.VoucherRequest;
 import com.shose.shoseshop.controller.response.VoucherResponse;
+import com.shose.shoseshop.entity.User;
 import com.shose.shoseshop.entity.Voucher;
+import com.shose.shoseshop.repository.UserRepository;
 import com.shose.shoseshop.repository.VoucherRepository;
 import com.shose.shoseshop.specification.VoucherSpecification;
 import lombok.AccessLevel;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +28,18 @@ import java.util.stream.Collectors;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class VoucherService {
     VoucherRepository voucherRepository;
+    UserRepository userRepository;
     ModelMapper modelMapper;
+    EmailService emailService;
 
     @Transactional
     public void create(VoucherRequest voucherRequest) {
         voucherRepository.save(modelMapper.map(voucherRequest, Voucher.class));
+        List<User> user = userRepository.findAll();
+        Set<String> emails = user.stream().map(User::getEmail).collect(Collectors.toSet());
+        String subject = "Thông báo có khuyến mãi mới!";
+        String body = "Shose shop vừa thêm voucher có mã: " + voucherRequest.getCode();
+        emailService.sendMail(subject, body, emails);
     }
 
     public Page<VoucherResponse> getAllForAdmin(Pageable pageable, OrderFilterRequest request) {
