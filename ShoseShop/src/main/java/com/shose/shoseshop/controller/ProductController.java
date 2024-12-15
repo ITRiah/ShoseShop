@@ -1,5 +1,6 @@
 package com.shose.shoseshop.controller;
 
+import com.shose.shoseshop.configuration.ModelMapperConfig;
 import com.shose.shoseshop.controller.request.ProductFilterRequest;
 import com.shose.shoseshop.controller.request.ProductRequest;
 import com.shose.shoseshop.controller.response.ProductResponse;

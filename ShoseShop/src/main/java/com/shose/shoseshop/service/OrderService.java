@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface OrderService {
-    void create(OrderRequest orderRequest);
+    Long create(OrderRequest orderRequest);
     void update(Long id, OrderStatus status);
     Page<OrderResponse> getAll(Pageable pageable, OrderFilterRequest request);
     List<StatisticResponse> statistic(Long year);
@@ -23,4 +23,5 @@ public interface OrderService {
     List<OrderResponse> getByUser();
     void cancelOrder(Long orderId);
     byte[] exportOrder(Long orderId);
+    void updatePaymentStatus(Long orderId);
 }

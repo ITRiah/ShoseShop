@@ -91,7 +91,7 @@ public class EmailService {
         List<Map<String, Object>> details = orderDetails.stream().map(detail -> {
             Map<String, Object> map = new HashMap<>();
             map.put("productName", detail.getProductDetail().getProduct().getName());
-            map.put("color", detail.getProductDetail().getColor());
+            map.put("color", convertColor(detail.getProductDetail().getColor()));
             map.put("size", detail.getProductDetail().getSize());
             map.put("quantity", detail.getQuantity());
             map.put("price", formatCurrency(detail.getProductDetail().getPrice()));

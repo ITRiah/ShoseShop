@@ -32,9 +32,8 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping
-    public ResponseData<Void> create(@Valid @RequestBody OrderRequest orderRequest) {
-        orderService.create(orderRequest);
-        return new ResponseData<>(HttpStatus.CREATED, "Create order is success!");
+    public ResponseData<Long> create(@Valid @RequestBody OrderRequest orderRequest) {
+        return new ResponseData<>(orderService.create(orderRequest));
     }
 
     @PutMapping

@@ -1,9 +1,5 @@
 package com.shose.shoseshop.service.impl;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.shose.shoseshop.constant.OrderStatus;
 import com.shose.shoseshop.constant.PaymentStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
@@ -19,7 +15,6 @@ import com.shose.shoseshop.service.OrderService;
 import com.shose.shoseshop.specification.OrderSpecification;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
@@ -31,10 +26,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
@@ -52,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void create(OrderRequest orderRequest) {
+    public Long create(OrderRequest orderRequest) {
         User user = getUserFromContext();
         Order order = createOrderFromRequest(orderRequest, user);
         List<CartDetail> cartDetails = getCartDetails(orderRequest.getCartDetailIds());
@@ -62,12 +55,13 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.PENDING);
         order.setPaymentStatus(PaymentStatus.WATTING);
         order.setOrderDetails(orderDetails);
-        saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails, orderRequest.getCartDetailIds());
+        Long id = saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails, orderRequest.getCartDetailIds());
         try {
             emailService.sendInvoiceWithAttachment(user.getEmail(), order);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+        return id;
     }
 
     private User getUserFromContext() {
@@ -120,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
         return total;
     }
 
-    private void saveOrderAndDetailsAndCartDetails(Order order, List<OrderDetail> orderDetails, List<CartDetail> cartDetails, Set<Long> cartDetailIds) {
+    private Long saveOrderAndDetailsAndCartDetails(Order order, List<OrderDetail> orderDetails, List<CartDetail> cartDetails, Set<Long> cartDetailIds) {
         List<ProductDetail> productDetails = new ArrayList<>();
         for (CartDetail cartDetail : cartDetails) {
             ProductDetail productDetail = cartDetail.getProductDetail();
@@ -135,8 +129,9 @@ public class OrderServiceImpl implements OrderService {
         productDetailRepository.saveAll(productDetails);
         cartDetailRepository.saveAll(cartDetails);
         orderDetailRepository.saveAll(orderDetails);
-        orderRepository.save(order);
+        Order orderSave = orderRepository.save(order);
         cartService.deleteCartDetails(cartDetailIds);
+        return orderSave.getId();
     }
 
     @Override
@@ -255,5 +250,13 @@ public class OrderServiceImpl implements OrderService {
     public byte[] exportOrder(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
         return emailService.generateInvoicePdf(order);
+    }
+
+    @Override
+    @Transactional
+    public void updatePaymentStatus(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        order.setPaymentStatus(PaymentStatus.COMPLETE);
+        orderRepository.save(order);
     }
 }

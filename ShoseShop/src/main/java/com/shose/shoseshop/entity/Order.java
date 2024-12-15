@@ -43,6 +43,7 @@ public class Order extends BaseEntity {
     private PaymentMethod paymentMethod;
     private BigDecimal totalAmount;
     private String note;
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus = PaymentStatus.WATTING;
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;

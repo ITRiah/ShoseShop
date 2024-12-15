@@ -1,20 +1,16 @@
 package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.controller.request.ChangePasswordRequest;
-import com.shose.shoseshop.controller.request.ProductFilterRequest;
 import com.shose.shoseshop.controller.request.UserFilterRequest;
 import com.shose.shoseshop.controller.request.UserRequest;
-import com.shose.shoseshop.controller.response.ProductResponse;
 import com.shose.shoseshop.controller.response.ResponseData;
 import com.shose.shoseshop.controller.response.UserResponse;
-import com.shose.shoseshop.entity.Product_;
 import com.shose.shoseshop.entity.User_;
 import com.shose.shoseshop.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
