@@ -48,7 +48,7 @@ public class UserController {
     @PutMapping("/block")
     public ResponseData<Void> blockUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
-        return new ResponseData<>(HttpStatus.CREATED, "Tài khoản được chặn thành công!");
+        return new ResponseData<>(HttpStatus.CREATED, "Cập nhật trạng thái tài khoản thành công!");
     }
 
     @PostMapping("/search")
