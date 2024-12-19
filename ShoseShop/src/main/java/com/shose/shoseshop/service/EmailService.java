@@ -1,12 +1,8 @@
 package com.shose.shoseshop.service;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import com.shose.shoseshop.constant.ShippingMethod;
 import com.shose.shoseshop.entity.Order;
 import com.shose.shoseshop.entity.OrderDetail;
 import jakarta.mail.MessagingException;
@@ -28,6 +24,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -73,18 +70,13 @@ public class EmailService {
     }
 
     public void sendInvoiceWithAttachment(String to, Order order) throws MessagingException {
-        // Tiêu đề email
         String subject = "Hóa đơn đặt hàng của bạn";
         List<OrderDetail> orderDetails = order.getOrderDetails();
         String fullName = order.getFullName();
         BigDecimal totalAmount = order.getTotalAmount();
-
-        // Tạo context để truyền dữ liệu vào template
         Context context = new Context();
         context.setVariable("fullName", fullName);
         context.setVariable("totalAmount", formatCurrency(totalAmount));
-
-        // Map danh sách chi tiết đơn hàng
         List<Map<String, Object>> details = orderDetails.stream().map(detail -> {
             Map<String, Object> map = new HashMap<>();
             map.put("productName", detail.getProductDetail().getProduct().getName());
@@ -98,29 +90,24 @@ public class EmailService {
             return map;
         }).collect(Collectors.toList());
         context.setVariable("orderDetails", details);
+        if (order.getShippingMethod() == ShippingMethod.FAST) {
+            context.setVariable("shipPrice", BigDecimal.valueOf(15000));
+        } else {
+            context.setVariable("shipPrice", BigDecimal.valueOf(50000));
+        }
 
-        // Render template email từ Thymeleaf
         String body = templateEngine.process("hoadon", context);
-
-        // Tạo PDF hóa đơn
         byte[] pdfInvoice = generateInvoicePdf(order);
-
-        // Tạo email với tệp đính kèm
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(body, true);
         helper.setFrom("vhai31102002@gmail.com");
-
-        // Đính kèm file PDF hóa đơn
         helper.addAttachment("HoaDon.pdf", new ByteArrayResource(pdfInvoice));
-
-        // Gửi email
         javaMailSender.send(message);
     }
 
-    // Hàm định dạng tiền tệ
     private String formatCurrency(BigDecimal value) {
         NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         return format.format(value);
@@ -138,9 +125,15 @@ public class EmailService {
         LocalDate localDate = orderDate.atZone(ZoneId.systemDefault()).toLocalDate();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String formattedDate = localDate.format(formatter);
+        BigDecimal shippingPrice = BigDecimal.ZERO;
+        if (order.getShippingMethod() == ShippingMethod.FAST) {
+            shippingPrice = BigDecimal.valueOf(15000);
+        } else {
+            shippingPrice = BigDecimal.valueOf(15000);
+        }
         try {
             Document document = new Document();
-            PdfWriter.getInstance(document, out);
+            PdfWriter writer = PdfWriter.getInstance(document, out);
             document.open();
 
             // Load custom font
@@ -165,7 +158,7 @@ public class EmailService {
             // Bảng chi tiết đơn hàng
             PdfPTable table = new PdfPTable(6);
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{2, 1.5f, 1.5f, 2, 1.5f, 2});
+            table.setWidths(new float[]{2, 1.5f, 1.5f, 2, 2f, 2});
 
             // Thêm tiêu đề bảng
             table.addCell(new Paragraph("Sản phẩm", boldFont));
@@ -186,6 +179,9 @@ public class EmailService {
                         .multiply(BigDecimal.valueOf(detail.getQuantity()))), font));
             }
             document.add(table);
+            document.add(new Paragraph(" "));
+            Paragraph shipPrice = new Paragraph("Phí vận chuyển: " + formatCurrency(shippingPrice), font);
+            document.add(shipPrice);
 
             // Thêm tổng tiền bên dưới bảng
             document.add(new Paragraph(" "));
@@ -198,12 +194,33 @@ public class EmailService {
                 document.add(new Paragraph("Ghi chú: " + note, font));
             }
 
+            PdfContentByte canvas = writer.getDirectContent();
+            float centerX = document.getPageSize().getWidth() / 2;
+            float startY = 50;
+            float lineSpacing = 15;
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER,
+                    new Phrase("================================================", boldFont),
+                    centerX, startY, 0);
+
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER,
+                    new Phrase("ShoseShop cảm ơn bạn đã đặt hàng!", boldFont),
+                    centerX, startY - lineSpacing, 0);
+
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER,
+                    new Phrase("Số điện thoại: 0382952063", font),
+                    centerX, startY - 2 * lineSpacing, 0);
+
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER,
+                    new Phrase("Địa chỉ: Số 88-Cầu Diễn - Bắc Từ Liêm - Hà Nội", font),
+                    centerX, startY - 3 * lineSpacing, 0);
+
             document.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return out.toByteArray();
     }
+
 
     private String convertColor(String rgb) {
         Map<String, String> colorMap = new HashMap<>();

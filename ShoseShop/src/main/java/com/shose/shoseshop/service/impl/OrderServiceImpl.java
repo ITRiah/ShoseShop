@@ -142,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void update(Long id, OrderStatus newStatus) {
+    public void update(Long id, OrderStatus newStatus, PaymentStatus paymentStatus) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
         OrderStatus currentStatus = order.getStatus();
@@ -150,6 +150,7 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("Không thể cập nhật trạng thái đơn hàng từ : " + currentStatus.getValue() + " -> " + newStatus.getValue());
         }
         order.setStatus(newStatus);
+        order.setPaymentStatus(paymentStatus);
         orderRepository.save(order);
     }
 

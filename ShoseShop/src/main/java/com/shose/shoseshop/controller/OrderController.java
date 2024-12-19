@@ -1,6 +1,7 @@
 package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.constant.OrderStatus;
+import com.shose.shoseshop.constant.PaymentStatus;
 import com.shose.shoseshop.controller.request.OrderFilterRequest;
 import com.shose.shoseshop.controller.request.OrderRequest;
 import com.shose.shoseshop.controller.response.OrderResponse;
@@ -37,8 +38,8 @@ public class OrderController {
     }
 
     @PutMapping
-    public ResponseData<Void> updateStatus(@RequestParam("id") Long id, @RequestParam("status") OrderStatus status) {
-        orderService.update(id, status);
+    public ResponseData<Void> updateStatus(@RequestParam("id") Long id, @RequestParam("status") OrderStatus status, @RequestParam("paymentStatus") PaymentStatus paymentStatus) {
+        orderService.update(id, status, paymentStatus);
         return new ResponseData<>(HttpStatus.CREATED, "Trạng thái đơn hàng đã được cập nhật!");
     }
 

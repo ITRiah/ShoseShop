@@ -35,6 +35,7 @@ public class Order extends BaseEntity {
     private String phone;
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.PENDING;
+    @Lob
     private String reason;
     private String shippingAddress;
     @Enumerated(EnumType.STRING)

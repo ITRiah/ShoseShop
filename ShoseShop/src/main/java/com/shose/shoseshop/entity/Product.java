@@ -28,6 +28,7 @@ public class Product extends BaseEntity{
     private Category category;
 
     private String name;
+    @Lob
     private String description;
     private String img;
     private BigDecimal priceRange;

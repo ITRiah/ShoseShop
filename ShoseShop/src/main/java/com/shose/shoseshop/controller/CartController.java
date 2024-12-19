@@ -20,8 +20,8 @@ public class CartController {
     CartService cartService;
 
     @PutMapping
-    public ResponseData<Void> addtoCart(@RequestParam Long productDetailId, @RequestParam Long quantity) {
-        cartService.addToCart(productDetailId, quantity);
+    public ResponseData<Void> addtoCart(@RequestParam Long productDetailId, @RequestParam Long quantity,  @RequestParam Long actionType) {
+        cartService.addToCart(productDetailId, quantity, actionType);
         return new ResponseData<>(HttpStatus.CREATED, "Thêm sản phẩm vào giỏ hàng thành công!");
     }
 

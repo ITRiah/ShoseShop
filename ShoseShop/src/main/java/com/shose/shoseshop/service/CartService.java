@@ -8,7 +8,7 @@ import java.util.Set;
 public interface CartService {
     void create(User user);
 
-    void addToCart(Long productDetailId, Long quantity);
+    void addToCart(Long productDetailId, Long quantity, Long actionType);
 
     CartResponse getCart();
 

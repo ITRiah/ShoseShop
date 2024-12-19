@@ -33,7 +33,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addToCart(Long productDetailId, Long quantity) {
+    public void addToCart(Long productDetailId, Long quantity, Long actionType) {
         UserDetails loginUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(EntityNotFoundException::new);
         Cart cart = cartRepository.findByUser_Id(user.getId()).orElseThrow(EntityNotFoundException::new);
@@ -46,7 +46,11 @@ public class CartServiceImpl implements CartService {
         if (existingCartDetail.isPresent()) {
             CartDetail cartDetail = existingCartDetail.get();
             if (quantity == 1) {
-                cartDetail.setQuantity(quantity + cartDetail.getQuantity());
+                if (actionType == 1) {
+                    cartDetail.setQuantity(quantity);
+                } else {
+                    cartDetail.setQuantity(quantity + cartDetail.getQuantity());
+                }
             } else {
                 cartDetail.setQuantity(quantity);
             }
