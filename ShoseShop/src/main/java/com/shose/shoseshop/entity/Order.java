@@ -45,7 +45,7 @@ public class Order extends BaseEntity {
     private BigDecimal totalAmount;
     private String note;
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus = PaymentStatus.WATTING;
+    private PaymentStatus paymentStatus = PaymentStatus.WAITING;
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;
     private Long voucherId;

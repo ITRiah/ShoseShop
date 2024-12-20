@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalAmount = calculateTotalAmount(orderDetails, orderRequest);
         order.setTotalAmount(totalAmount);
         order.setStatus(OrderStatus.PENDING);
-        order.setPaymentStatus(PaymentStatus.WATTING);
+        order.setPaymentStatus(PaymentStatus.WAITING);
         Long id = saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails, orderRequest.getCartDetailIds());
         try {
             order.setOrderDetails(orderDetails);
@@ -155,21 +155,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
-        switch (currentStatus) {
-            case PENDING:
-                return newStatus == OrderStatus.CONFIRMED || newStatus == OrderStatus.CANCELED;
-            case CONFIRMED:
-                return newStatus == OrderStatus.PROCESSING;
-            case PROCESSING:
-                return newStatus == OrderStatus.SHIPPED;
-            case SHIPPED:
-                return newStatus == OrderStatus.DELIVERED;
-            case DELIVERED:
-            case CANCELED:
-                return false;
-            default:
-                return false;
-        }
+        if (newStatus == currentStatus) return true;
+        return switch (currentStatus) {
+            case PENDING -> newStatus == OrderStatus.CONFIRMED || newStatus == OrderStatus.CANCELED;
+            case CONFIRMED -> newStatus == OrderStatus.PROCESSING;
+            case PROCESSING -> newStatus == OrderStatus.SHIPPED;
+            case SHIPPED -> newStatus == OrderStatus.DELIVERED;
+            case DELIVERED, CANCELED -> false;
+            default -> false;
+        };
     }
 
 
