@@ -55,9 +55,9 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(totalAmount);
         order.setStatus(OrderStatus.PENDING);
         order.setPaymentStatus(PaymentStatus.WATTING);
-        order.setOrderDetails(orderDetails);
         Long id = saveOrderAndDetailsAndCartDetails(order, orderDetails, cartDetails, orderRequest.getCartDetailIds());
         try {
+            order.setOrderDetails(orderDetails);
             emailService.sendInvoiceWithAttachment(user.getEmail(), order);
         } catch (MessagingException e) {
             e.printStackTrace();

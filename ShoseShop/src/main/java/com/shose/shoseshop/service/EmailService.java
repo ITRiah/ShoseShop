@@ -77,6 +77,11 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("fullName", fullName);
         context.setVariable("totalAmount", formatCurrency(totalAmount));
+        if (order.getShippingMethod() == ShippingMethod.FAST) {
+            context.setVariable("shipPrice", formatCurrency(BigDecimal.valueOf(15000)));
+        } else {
+            context.setVariable("shipPrice", formatCurrency(BigDecimal.valueOf(50000)));
+        }
         List<Map<String, Object>> details = orderDetails.stream().map(detail -> {
             Map<String, Object> map = new HashMap<>();
             map.put("productName", detail.getProductDetail().getProduct().getName());
@@ -90,11 +95,6 @@ public class EmailService {
             return map;
         }).collect(Collectors.toList());
         context.setVariable("orderDetails", details);
-        if (order.getShippingMethod() == ShippingMethod.FAST) {
-            context.setVariable("shipPrice", BigDecimal.valueOf(15000));
-        } else {
-            context.setVariable("shipPrice", BigDecimal.valueOf(50000));
-        }
 
         String body = templateEngine.process("hoadon", context);
         byte[] pdfInvoice = generateInvoicePdf(order);
@@ -125,7 +125,7 @@ public class EmailService {
         LocalDate localDate = orderDate.atZone(ZoneId.systemDefault()).toLocalDate();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String formattedDate = localDate.format(formatter);
-        BigDecimal shippingPrice = BigDecimal.ZERO;
+        BigDecimal shippingPrice;
         if (order.getShippingMethod() == ShippingMethod.FAST) {
             shippingPrice = BigDecimal.valueOf(15000);
         } else {
@@ -179,14 +179,14 @@ public class EmailService {
                         .multiply(BigDecimal.valueOf(detail.getQuantity()))), font));
             }
             document.add(table);
+
             document.add(new Paragraph(" "));
-            Paragraph shipPrice = new Paragraph("Phí vận chuyển: " + formatCurrency(shippingPrice), font);
+            Paragraph shipPrice = new Paragraph("Phí vận chuyển: " + formatCurrency(shippingPrice), boldFont);
             document.add(shipPrice);
 
             // Thêm tổng tiền bên dưới bảng
             document.add(new Paragraph(" "));
             Paragraph totalParagraph = new Paragraph("Tổng tiền: " + formatCurrency(totalAmount), boldFont);
-            totalParagraph.setAlignment(Element.ALIGN_RIGHT);
             document.add(totalParagraph);
 
             // Thêm ghi chú nếu có
@@ -196,8 +196,8 @@ public class EmailService {
 
             PdfContentByte canvas = writer.getDirectContent();
             float centerX = document.getPageSize().getWidth() / 2;
-            float startY = 50;
-            float lineSpacing = 15;
+            float startY = 80;
+            float lineSpacing = 20;
             ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER,
                     new Phrase("================================================", boldFont),
                     centerX, startY, 0);
