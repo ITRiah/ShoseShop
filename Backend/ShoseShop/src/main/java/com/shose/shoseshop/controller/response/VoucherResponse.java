@@ -1,5 +1,6 @@
 package com.shose.shoseshop.controller.response;
 
+import com.shose.shoseshop.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VoucherResponse {
+public class VoucherResponse extends BaseEntity {
     private Long id;
     private String code;
     private Integer value;

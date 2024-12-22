@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
         OTP oldOTP = otpRepository.findByEmail(email).orElse(null);
         if (oldOTP == null) {
             OTP otp = otpService.create(email);
-            emailService.sendMail("Yêu cầu lấy lại mật khẩu!", "OTP: " + otp.getOtp(), Set.of(email));
+            emailService.sendOTP(otp.getOtp(), Set.of(email));
         } else {
             oldOTP.markAsDelete();
             otpRepository.save(oldOTP);

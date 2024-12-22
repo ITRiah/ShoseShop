@@ -3,6 +3,7 @@ package com.shose.shoseshop.service;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.shose.shoseshop.constant.ShippingMethod;
+import com.shose.shoseshop.controller.request.VoucherRequest;
 import com.shose.shoseshop.entity.Order;
 import com.shose.shoseshop.entity.OrderDetail;
 import jakarta.mail.MessagingException;
@@ -41,6 +42,50 @@ public class EmailService {
         try {
             String[] to = recipients.toArray(new String[0]);
             helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true);
+            helper.setFrom("vhai31102002@gmail.com");
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendNewVoucherEmail(VoucherRequest request, Set<String> emails) {
+        String subject = "Thông báo khuyến mãi mới từ Shose Shop!";
+        String description = "Giảm " + request.getValue() + " tối đa " + formatCurrency(request.getMaxMoney());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedDate = request.getExpiredTime().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .format(formatter);
+        Context context = new Context();
+        context.setVariable("code", request.getCode());
+        context.setVariable("description", description);
+        context.setVariable("endDate", formattedDate);
+        String body = templateEngine.process("voucher", context);
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
+            helper.setTo(emails.toArray(new String[0]));
+            helper.setSubject(subject);
+            helper.setText(body, true);
+            helper.setFrom("vhai31102002@gmail.com");
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendOTP(String otp, Set<String> emails) {
+        String subject = "Yêu cầu lấy lại mật khẩu!";
+        Context context = new Context();
+        context.setVariable("otp", otp);
+        String body = templateEngine.process("password", context);
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
+            helper.setTo(emails.toArray(new String[0]));
             helper.setSubject(subject);
             helper.setText(body, true);
             helper.setFrom("vhai31102002@gmail.com");

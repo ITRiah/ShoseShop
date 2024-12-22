@@ -1,5 +1,6 @@
 package com.shose.shoseshop.configuration.security;
 
+import com.shose.shoseshop.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,4 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class JWTToken {
     private String accessToken;
+    private String role;
 }

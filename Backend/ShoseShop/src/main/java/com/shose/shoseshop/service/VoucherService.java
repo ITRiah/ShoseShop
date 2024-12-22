@@ -37,9 +37,7 @@ public class VoucherService {
         voucherRepository.save(modelMapper.map(voucherRequest, Voucher.class));
         List<User> user = userRepository.findAll();
         Set<String> emails = user.stream().map(User::getEmail).collect(Collectors.toSet());
-        String subject = "Thông báo có khuyến mãi mới!";
-        String body = "Shose shop vừa thêm voucher có mã: " + voucherRequest.getCode();
-        emailService.sendMail(subject, body, emails);
+        emailService.sendNewVoucherEmail(voucherRequest, emails);
     }
 
     public Page<VoucherResponse> getAllForAdmin(Pageable pageable, OrderFilterRequest request) {
