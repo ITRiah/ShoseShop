@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voucher Notification</title>
 </head>
 <body>
-$END$
+<div class="container">
+  <h1>Voucher khuyến mãi mới đang chờ bạn!</h1>
+  <p>ShoseShop rất vui được thông báo rằng chúng tôi vừa phát hành một voucher mới để bạn có thể mua sắm thỏa thích.</p>
+  <p><strong>Mã voucher: <span th:text="${code}"></span></strong></p>
+  <p><strong>Giảm giá:</strong> <span th:text="${description}"></span></p>
+  <p><strong>Hạn sử dụng:</strong> <span th:text="${endDate}"></span></p>
+  <div class="footer">
+    <p style="font-weight: bold;">================================================</p>
+    <div style="font-weight: bold; text-align: center; line-height: 1.8; margin-left: 0; margin-right: auto; width: fit-content;">
+      <p>ShoseShop</p>
+      <p>Số điện thoại: 0382952063</p>
+      <p>Địa chỉ: Số 88-Cầu Diễn - Bắc Từ Liêm - Hà Nội</p>
+    </div>
+  </div>
+</div>
 </body>
 </html>
