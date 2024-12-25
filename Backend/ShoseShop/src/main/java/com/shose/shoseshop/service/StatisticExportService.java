@@ -16,7 +16,6 @@ public class StatisticExportService {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Thống kê doanh thu");
 
-            // Tạo tiêu đề cột
             Row headerRow = sheet.createRow(0);
             String[] headers = {"Tháng", "Năm", "Doanh thu"};
             for (int i = 0; i < headers.length; i++) {
@@ -29,12 +28,20 @@ public class StatisticExportService {
                 cell.setCellStyle(style);
             }
 
+            CellStyle currencyStyle = workbook.createCellStyle();
+            DataFormat format = workbook.createDataFormat();
+            currencyStyle.setDataFormat(format.getFormat("#,##0 \"VNĐ\""));
+
             int rowIdx = 1;
             for (StatisticResponse stat : statistics) {
                 Row row = sheet.createRow(rowIdx++);
+
                 row.createCell(0).setCellValue(stat.getMonth());
                 row.createCell(1).setCellValue(stat.getYear());
-                row.createCell(2).setCellValue(stat.getTotalRevenue().doubleValue());
+
+                Cell revenueCell = row.createCell(2);
+                revenueCell.setCellValue(stat.getTotalRevenue().doubleValue());
+                revenueCell.setCellStyle(currencyStyle);
             }
 
             for (int i = 0; i < headers.length; i++) {
