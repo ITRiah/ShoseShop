@@ -1,5 +1,6 @@
 package com.shose.shoseshop.controller;
 
+import com.shose.shoseshop.constant.PageData;
 import com.shose.shoseshop.controller.request.ChangePasswordRequest;
 import com.shose.shoseshop.controller.request.ResFilter;
 import com.shose.shoseshop.controller.request.UserFilterRequest;
@@ -87,7 +88,7 @@ public class UserController {
     }
 
     @GetMapping("/1")
-    public ResponseData<Reservation> getRe(@RequestBody ResFilter request, @PageableDefault Pageable pageable) {
+    public ResponseData<PageData<Reservation>> getRe(@RequestBody ResFilter request, @PageableDefault Pageable pageable) {
         return new ResponseData<>(reservationService.getRes(request, pageable));
     }
 }
