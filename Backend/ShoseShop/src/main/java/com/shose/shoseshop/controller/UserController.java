@@ -1,16 +1,21 @@
 package com.shose.shoseshop.controller;
 
 import com.shose.shoseshop.controller.request.ChangePasswordRequest;
+import com.shose.shoseshop.controller.request.ResFilter;
 import com.shose.shoseshop.controller.request.UserFilterRequest;
 import com.shose.shoseshop.controller.request.UserRequest;
 import com.shose.shoseshop.controller.response.ResponseData;
 import com.shose.shoseshop.controller.response.UserResponse;
+import com.shose.shoseshop.entity.Reservation;
 import com.shose.shoseshop.entity.User_;
+import com.shose.shoseshop.repository.ReservationRepository;
+import com.shose.shoseshop.service.ReservationService;
 import com.shose.shoseshop.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     UserService userService;
+    ReservationService reservationService;
 
     @PostMapping
     public ResponseData<Void> create(@Valid @RequestBody UserRequest userRequest) {
@@ -78,5 +84,10 @@ public class UserController {
     @GetMapping
     public ResponseData<UserResponse> getLoginUser() {
         return new ResponseData<>(userService.getLoginUser());
+    }
+
+    @GetMapping("/1")
+    public ResponseData<Reservation> getRe(@RequestBody ResFilter request, @PageableDefault Pageable pageable) {
+        return new ResponseData<>(reservationService.getRes(request, pageable));
     }
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="005" author="riah">
+        <createTable tableName="reservation">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_reservation_user"
+                             references="user(id)"/>
+            </column>
+            <column name="seat_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_reservation_seat"
+                             references="seat(id)"/>
+            </column>
+            <column name="start_time" type="TIMESTAMP"/>
+            <column name="end_time" type="TIMESTAMP"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="check_in_at" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP"/>
+
+            <column name="extended_from_reservation_id" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_reservation_extended"
+                             references="reservation(id)"/>
+            </column>
+
+            <!-- metadata (còn lại) -->
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

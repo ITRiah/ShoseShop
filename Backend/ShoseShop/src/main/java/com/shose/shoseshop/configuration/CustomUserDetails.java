@@ -14,6 +14,7 @@ public class CustomUserDetails implements UserDetails {
 
     private Long userId;
     private String email;
+    private String password;
     private Role role;
     private boolean isAuthorizeAdmin;
 
@@ -30,13 +31,20 @@ public class CustomUserDetails implements UserDetails {
         this.isAuthorizeAdmin = isAuthorizeAdmin;
     }
 
+    public CustomUserDetails(Long userId, String email, String password, Role role) {
+        this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     public CustomUserDetails() {
 
     }
 
     @Override
     public String getPassword() {
-        throw new RuntimeException("Calls to UserDetails.getPassword() are forbidden");
+        return this.password;
     }
 
     @Override

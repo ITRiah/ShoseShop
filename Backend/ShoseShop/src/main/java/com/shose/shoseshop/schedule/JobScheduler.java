@@ -26,7 +26,7 @@ public class JobScheduler {
     private final VoucherRepository voucherRepository;
     private final OTPRepository otpRepository;
 
-    @Scheduled(cron = "0 30 8 * * *")
+//    @Scheduled(cron = "0 30 8 * * *")
     public void sendMail() {
         LocalDate date = LocalDate.now();
         int month = date.getMonthValue();
@@ -39,7 +39,7 @@ public class JobScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
+//    @Scheduled(cron = "0 0 0 * * *")
     public void updateVoucher() {
         List<Voucher> vouchers = voucherRepository.findAllByExpiredTimeAfterOrEqual(new Date());
         if (!CollectionUtils.isEmpty(vouchers)) {
@@ -47,7 +47,7 @@ public class JobScheduler {
         }
     }
 
-    @Scheduled(fixedRate = 1000)
+//    @Scheduled(fixedRate = 1000)
     public void markExpiredOtps() {
         Instant now = Instant.now();
         List<OTP> expiredOtps = otpRepository.findAll();
@@ -60,7 +60,7 @@ public class JobScheduler {
         otpRepository.saveAll(expiredOtps);
     }
 
-    @Scheduled(fixedRate = 86400000)
+//    @Scheduled(fixedRate = 86400000)
     public void markExpiredVouchers() {
         Date now = new Date();
         List<Voucher> expiredVouchers = voucherRepository.findAll();

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+      http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="007" author="riah">
+        <!-- Tạo bảng user_roles -->
+        <createTable tableName="user_roles">
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- metadata -->
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+            <column name="last_modified_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </createTable>
+
+        <!-- Khóa chính kết hợp -->
+        <addPrimaryKey
+                tableName="user_roles"
+                columnNames="user_id, role_id"
+                constraintName="pk_user_roles"/>
+
+        <!-- FK: user_id → user.id -->
+        <addForeignKeyConstraint
+                baseTableName="user_roles"
+                baseColumnNames="user_id"
+                constraintName="fk_user_roles_user"
+                referencedTableName="user"
+                referencedColumnNames="id"/>
+
+        <!-- FK: role_id → role.id -->
+        <addForeignKeyConstraint
+                baseTableName="user_roles"
+                baseColumnNames="role_id"
+                constraintName="fk_user_roles_role"
+                referencedTableName="role"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

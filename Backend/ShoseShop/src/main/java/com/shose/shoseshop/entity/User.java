@@ -12,7 +12,7 @@ import org.hibernate.annotations.Where;
 import java.util.Date;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 public class User extends BaseEntity {
