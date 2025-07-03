@@ -21,4 +21,12 @@ public interface UserService {
     UserResponse getById(Long id);
     void update(UserRequest UserRequest);
     UserResponse getLoginUser();
+
+    String generateAndSendOTP(String email);
+
+    void sendOTPEmail(String email, String otp);
+
+    boolean verifyOTP(String email, String otp);
+
+    void resetPassword(String email, String newPassword);
 }

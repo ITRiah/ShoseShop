@@ -43,6 +43,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/v1/products").permitAll()
                 .requestMatchers("/api/v1/payments").permitAll()
                 .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/ws/**").permitAll()
             )
             .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;

@@ -1,0 +1,5 @@
+docker run -d -p 6379:6379 --name redis-dev redis
+
+docker ps
+
+docker exec -it f5c8468c1434 redis-cli

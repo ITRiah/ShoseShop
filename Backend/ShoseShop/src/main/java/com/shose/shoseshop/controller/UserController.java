@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -90,5 +91,23 @@ public class UserController {
     @GetMapping("/1")
     public ResponseData<PageData<Reservation>> getRe(@RequestBody ResFilter request, @PageableDefault Pageable pageable) {
         return new ResponseData<>(reservationService.getRes(request, pageable));
+    }
+
+    @PostMapping("/forgot")
+    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
+        userService.generateAndSendOTP(email);
+        return ResponseEntity.ok("OTP đã được gửi đến email của bạn.");
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<String> resetPassword(@RequestParam String email,
+                                                @RequestParam String otp,
+                                                @RequestParam String newPassword) {
+        if (userService.verifyOTP(email, otp)) {
+            userService.resetPassword(email, newPassword);
+            return ResponseEntity.ok("Đặt lại mật khẩu thành công.");
+        } else {
+            return ResponseEntity.badRequest().body("OTP không hợp lệ hoặc đã hết hạn.");
+        }
     }
 }

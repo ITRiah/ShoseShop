@@ -25,13 +25,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.Jedis;
 
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +51,8 @@ public class UserServiceImpl implements UserService {
     OTPService otpService;
     ModelMapper modelMapper;
     OTPRepository otpRepository;
+    JavaMailSender mailSender;
+    RedisTemplate<String, String> redisTemplate;
 
     @Override
     public void create(UserRequest userRequest) {
@@ -134,6 +143,48 @@ public class UserServiceImpl implements UserService {
             oldOTP.markAsDelete();
             otpRepository.save(oldOTP);
         }
+    }
+
+    public String generateAndSendOTP(String email) {
+        // Tạo OTP 6 chữ số
+        String otp = String.format("%06d", new Random().nextInt(999999));
+
+        // Lưu OTP vào Redis với key là email và thời hạn 5 phút
+        redisTemplate.opsForValue().set("otp:" + email, otp, 60, TimeUnit.SECONDS);
+
+        // Gửi email chứa OTP
+        sendOTPEmail(email, otp);
+
+        return otp;
+    }
+
+    // Gửi email OTP
+    public void sendOTPEmail(String email, String otp) {
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mailSender.createMimeMessage(), true);
+            helper.setTo(email);
+            helper.setSubject("Mã OTP để đặt lại mật khẩu");
+            helper.setText("Mã OTP của bạn là: " + otp + ". Mã này có hiệu lực trong 5 phút.", true);
+            mailSender.send(helper.getMimeMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi gửi email OTP: " + e.getMessage());
+        }
+    }
+
+    // Xác thực OTP
+    public boolean verifyOTP(String email, String otp) {
+        String storedOTP = redisTemplate.opsForValue().get("otp:" + email);
+        if (storedOTP == null) {
+            return false;
+        }
+        return storedOTP.equals(otp);
+    }
+
+    @Transactional
+    public void resetPassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+        user.setPassword(newPassword);
+        redisTemplate.delete("otp:" + email);
     }
 
 
