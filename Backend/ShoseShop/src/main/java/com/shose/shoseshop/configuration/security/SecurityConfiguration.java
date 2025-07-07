@@ -44,6 +44,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/v1/payments").permitAll()
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/notifications").permitAll()
+                .requestMatchers("/favicon.ico").permitAll()
             )
             .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;

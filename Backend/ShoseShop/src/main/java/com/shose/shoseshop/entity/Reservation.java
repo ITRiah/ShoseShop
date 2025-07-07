@@ -35,4 +35,6 @@ public class Reservation extends BaseEntity {
 
     @Column(name = "check_in_at")
     private Instant checkInAt;
+
+    private Long userId;
 }
