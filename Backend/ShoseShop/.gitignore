@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+# Ignore Firebase keys
+Backend/ShoseShop/src/main/resources/firebase/noti-app-5f5fc-firebase-adminsdk-fbsvc-642b96c0be.json
 
 ### STS ###
 .apt_generated

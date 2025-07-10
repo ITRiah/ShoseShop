@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 
 import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
 
@@ -31,7 +32,8 @@ public class ExcelExportController {
 
 
     @PostMapping
-    public ResponseEntity<byte[]> exportOtInsourceRequest(@PageableDefault Pageable pageable) {
+    public ResponseEntity<byte[]> exportOtInsourceRequest(@PageableDefault Pageable pageable,
+                                                          LocalDate startDate, LocalDate endDate) {
         try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
 //            request.setPageSize(DEFAULT_SIZE_EXPORT);
 //            request.setPageNumber(DEFAULT_PAGE);

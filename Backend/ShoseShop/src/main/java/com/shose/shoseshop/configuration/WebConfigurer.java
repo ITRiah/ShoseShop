@@ -45,7 +45,7 @@ public class WebConfigurer implements ServletContextInitializer, WebMvcConfigure
 
         // Cấu hình các giá trị CORS cho phép
         config.setAllowCredentials(true); // Cho phép gửi thông tin đăng nhập (cookies)
-        config.addAllowedOrigin("http://localhost:3000, http://localhost:3001"); // Địa chỉ frontend được phép truy cập
+        config.addAllowedOrigin("http://localhost:5173, http://localhost:3001"); // Địa chỉ frontend được phép truy cập
         config.addAllowedMethod("*"); // Cho phép tất cả các phương thức HTTP (GET, POST, PUT, DELETE, OPTIONS)
         config.addAllowedHeader("*"); // Cho phép tất cả các headers
 

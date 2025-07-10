@@ -1,12 +1,16 @@
 package com.shose.shoseshop.service;
 
+import com.google.firebase.messaging.*;
+import com.shose.shoseshop.controller.request.Notice;
 import com.shose.shoseshop.controller.response.Notification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -14,8 +18,33 @@ import org.springframework.stereotype.Service;
 public class NotificationService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
+
     public void sendNotification(String userId, Notification notification) {
         log.info("Sending notification to {} with payload {}", userId, notification);
         simpMessagingTemplate.convertAndSendToUser(userId, "/notification", notification);
     }
+
+    public void sendToUser(String userId, String title, String body, String fcmToken) throws FirebaseMessagingException {
+        Map<String, String> data = new HashMap<>();
+        data.put("userId", userId);
+
+        Message message = Message.builder()
+                .setNotification(com.google.firebase.messaging.Notification.builder()
+                        .setTitle(title)
+                        .setBody(body)
+                        .build())
+                .putAllData(data)
+                .setToken(fcmToken)
+                .build();
+
+        try {
+            String response = FirebaseMessaging.getInstance().send(message);
+            System.out.println("Gửi thông báo thành công cho userId: " + userId + ", response: " + response);
+        } catch (FirebaseMessagingException e) {
+            System.err.println("Lỗi khi gửi thông báo cho userId " + userId + ": " + e.getMessage());
+            throw e;
+        }
+    }
+
+
 }
