@@ -14,7 +14,7 @@ public class FirebaseConfig {
     @PostConstruct
     public void initialize() {
         try {
-            FileInputStream serviceAccount = new FileInputStream("src/main/resources/firebase/noti-app-5f5fc-firebase-adminsdk-fbsvc-642b96c0be.txt");
+            FileInputStream serviceAccount = new FileInputStream("src/main/resources/firebase/noti-app-5f5fc-firebase-adminsdk-fbsvc-642b96c0be.json");
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();

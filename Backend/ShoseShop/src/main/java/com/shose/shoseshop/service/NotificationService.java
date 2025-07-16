@@ -1,5 +1,7 @@
 package com.shose.shoseshop.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.*;
 import com.shose.shoseshop.controller.request.Notice;
 import com.shose.shoseshop.controller.response.Notification;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -18,10 +21,18 @@ import java.util.Map;
 public class NotificationService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-
-    public void sendNotification(String userId, Notification notification) {
-        log.info("Sending notification to {} with payload {}", userId, notification);
-        simpMessagingTemplate.convertAndSendToUser(userId, "/notification", notification);
+    public void sendNotification(List<String> msg, Long userId) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = mapper.writeValueAsString(msg);
+            simpMessagingTemplate.convertAndSendToUser(
+                    userId.toString(),
+                    "/notification",
+                    msg
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void sendToUser(String userId, String title, String body, String fcmToken) throws FirebaseMessagingException {

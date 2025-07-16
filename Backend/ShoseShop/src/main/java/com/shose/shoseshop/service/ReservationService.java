@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,35 +37,22 @@ public class ReservationService {
         );
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 60000)
     public void updateStatus() {
         List<Reservation> reservations = reservationRepository.findAll();
-        List<Reservation> updatedReservations = new ArrayList<>();
-
         for (Reservation reservation : reservations) {
             reservation.setStatus(ReservationStatus.RESERVED);
-            updatedReservations.add(reservation);
-
-            String userId = String.valueOf(reservation.getUserId());
-            String fcmToken = fcmController.getToken(userId);
-
-            if (fcmToken != null && !fcmToken.isEmpty()) {
-                try {
-                    notificationService.sendToUser(
-                            userId,
-                            "Cập nhật đặt chỗ #" + reservation.getId(),
-                            "Đặt chỗ của bạn đã được cập nhật thành: " + reservation.getStatus(),
-                            fcmToken
-                    );
-                    System.out.println("Gửi thông báo thành công cho userId: " + userId);
-                } catch (Exception e) {
-                    System.err.println("Lỗi khi gửi thông báo cho userId " + userId + ": " + e.getMessage());
-                }
-            } else {
-                System.out.println("Không tìm thấy fcmToken cho userId: " + userId);
-            }
+            notificationService.sendNotification(List.of("Send notification success"), reservation.getUserId());
         }
+        reservationRepository.saveAll(reservations);
+    }
 
-        reservationRepository.saveAll(updatedReservations);
+    public void updateStatusToPending() {
+        List<Reservation> reservations = reservationRepository.findAll();
+        for (Reservation reservation : reservations) {
+            reservation.setStatus(ReservationStatus.RESERVED);
+            notificationService.sendNotification(List.of("update to pending success"), reservation.getUserId());
+        }
+        reservationRepository.saveAll(reservations);
     }
 }

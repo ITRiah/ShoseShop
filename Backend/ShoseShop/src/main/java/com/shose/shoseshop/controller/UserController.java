@@ -110,4 +110,11 @@ public class UserController {
             return ResponseEntity.badRequest().body("OTP không hợp lệ hoặc đã hết hạn.");
         }
     }
+
+    @PutMapping("/pending")
+    public ResponseData<Void> updatePending() {
+        reservationService.updateStatusToPending();
+        return new ResponseData<>(HttpStatus.OK, "Success!");
+    }
+
 }
