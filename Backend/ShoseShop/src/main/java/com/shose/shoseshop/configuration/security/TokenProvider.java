@@ -1,11 +1,11 @@
 package com.shose.shoseshop.configuration.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,10 +17,12 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class TokenProvider {
 
     @Value("${security.jwt.secret}")
@@ -29,6 +31,7 @@ public class TokenProvider {
     Long tokenValidityInSeconds;
 
     private static final String AUTHORITIES_KEY = "auth";
+    private final RedisTemplate<String, String> redisTemplate;
 
     long tokenValidityInMilliseconds;
 
@@ -70,14 +73,40 @@ public class TokenProvider {
     }
 
     public boolean validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .setSigningKey(tokenSecretKey)
-                    .parseClaimsJws(token);
-            return true;
-        } catch (IllegalArgumentException e) {
-            log.error("Token validation error {}", e.getMessage());
+        if (redisTemplate.hasKey("blacklist_token:" + token).equals(Boolean.TRUE)) {
+            log.warn("Token is blacklisted: {}", token);
+            return false;
         }
-        return false;
+
+        try {
+            Jwts.parser().setSigningKey(tokenSecretKey).parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage());
+            throw new RuntimeException("Token expired");
+        } catch (UnsupportedJwtException | MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage());
+            throw new RuntimeException("Invalid token");
+        } catch (SignatureException e) {
+            log.error("JWT signature validation failed: {}", e.getMessage());
+            throw new RuntimeException("Invalid signature");
+        } catch (IllegalArgumentException e) {
+            log.error("Token validation error: {}", e.getMessage());
+            throw new RuntimeException("Token is empty or null");
+        }
+    }
+
+    public void blacklistToken(String token, long ttlSeconds) {
+        redisTemplate.opsForValue().set(
+                "blacklist_token:" + token,
+                token,
+                ttlSeconds,
+                TimeUnit.SECONDS
+        );
+        log.info("Token blacklisted: {}", token);
+    }
+
+    public long getTokenValidityInSeconds() {
+        return tokenValidityInSeconds;
     }
 }

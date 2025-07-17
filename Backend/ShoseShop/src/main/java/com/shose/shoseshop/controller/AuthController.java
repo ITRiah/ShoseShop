@@ -8,6 +8,7 @@ import com.shose.shoseshop.entity.RefreshToken;
 import com.shose.shoseshop.entity.User;
 import com.shose.shoseshop.repository.UserRepository;
 import com.shose.shoseshop.service.RefreshTokenService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -59,13 +62,8 @@ public class AuthController {
         return ResponseEntity.ok(jwtToken);
     }
 
-    /**
-     * Refresh access token using refresh token
-     */
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> body) {
-        String requestRefreshToken = body.get("refreshToken");
-
+    public ResponseEntity<?> refreshToken(String requestRefreshToken) {
         if (requestRefreshToken == null || requestRefreshToken.isBlank()) {
             return ResponseEntity.badRequest().body("Missing refresh token");
         }
@@ -92,5 +90,38 @@ public class AuthController {
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Refresh token is invalid or expired"));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String jwt = resolveToken(request);
+        if (jwt == null || jwt.isBlank()) {
+            return ResponseEntity.badRequest().body("Missing access token");
+        }
+
+        Authentication authentication = tokenProvider.getAuthentication(jwt);
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Blacklist access token
+        long ttlSeconds = tokenProvider.getTokenValidityInSeconds();
+        tokenProvider.blacklistToken(jwt, ttlSeconds);
+
+        // Xóa refresh token của user
+        refreshTokenService.deleteByUserId(user.getId());
+
+        // Xóa SecurityContext (tùy chọn, vì JWT là stateless)
+        SecurityContextHolder.clearContext();
+
+        return ResponseEntity.ok("Logout successful");
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }

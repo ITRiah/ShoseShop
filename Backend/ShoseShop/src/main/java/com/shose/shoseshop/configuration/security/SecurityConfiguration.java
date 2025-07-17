@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/login").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                .requestMatchers("/api/v1/users").permitAll()
+                .requestMatchers("/api/v1/users").hasAnyAuthority("ADMIN")
                 .requestMatchers("/api/v1/products").permitAll()
                 .requestMatchers("/api/v1/payments").permitAll()
                 .requestMatchers("/api/**").permitAll()
